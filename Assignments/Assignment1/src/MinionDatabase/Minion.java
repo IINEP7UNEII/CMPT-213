@@ -6,11 +6,11 @@ public class Minion
     private double height;
     private int evilDeeds;
 
-    public Minion(String name, double height, int evilDeeds)
+    public Minion()
     {
-        this.name = name;
-        this.height = height;
-        this.evilDeeds = evilDeeds;
+        this.name = "";
+        this.height = 0.0;
+        this.evilDeeds = 0;
     }
 
     public String getName()
