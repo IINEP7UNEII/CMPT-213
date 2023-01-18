@@ -1,5 +1,13 @@
 package MinionDatabase;
 
+/**
+* Description: The Minion class simulates a single minion object
+* which holds a few parameters with the minion's properties.
+*
+* @author Daniel Tolsky
+* @version 1.0
+*/
+
 public class Minion 
 {
     private String name;

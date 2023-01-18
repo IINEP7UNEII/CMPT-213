@@ -2,6 +2,15 @@ package MinionDatabase;
 import java.util.Vector;
 import java.util.Scanner;
 
+/**
+* Description: The UI class is used to create a database of Minion objects
+* and has several menus to interact with said database. Use with the Minion 
+* class in the MinionDatabase package.
+*
+* @author Daniel Tolsky
+* @version 1.0
+*/
+
 public class UI 
 {
     private Vector<Minion> data;
@@ -35,8 +44,8 @@ public class UI
 
     private void title()
     {
-        System.out.println("|Welcome to the Minion Database|");
-        System.out.println("********************************\n");
+        System.out.println("|Welcome to the Minion Database by Daniel Tolsky|");
+        System.out.println("*************************************************\n");
     }
 
     private void mainMenu()
