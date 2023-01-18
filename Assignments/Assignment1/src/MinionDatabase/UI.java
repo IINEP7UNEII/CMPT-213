@@ -22,12 +22,12 @@ public class UI
     private int choiceHandle()
     {
         System.out.print("Please select an option:\n> ");
-        int input = scan.nextInt();
+        int input = Integer.parseInt(scan.nextLine());
 
         while (input < 1 || input > 6)
         {
             System.out.print("Please select an option listed below:\n> ");
-            input = scan.nextInt();
+            input = Integer.parseInt(scan.nextLine());
         }
         
         return input;
@@ -110,7 +110,7 @@ public class UI
         newMinion.setName(input);
 
         System.out.print("\nEnter height (0.0 or more)\n> ");
-        input = scan.next();
+        input = scan.nextLine();
         newMinion.setHeight(Double.parseDouble(input));
         System.out.println();
 
@@ -145,7 +145,7 @@ public class UI
         if (input != 0)
         {
             System.out.print("\nEnter amount of evil deeds to increment by\n> ");
-            int amount = scan.nextInt();
+            int amount = Integer.parseInt(scan.nextLine());
             amount += data.elementAt(input - 1).getEvilDeeds();
 
             data.elementAt(input - 1).setEvilDeeds(amount);
@@ -159,22 +159,22 @@ public class UI
 
     private int selectFromListHandle()
     {
-        String input = scan.next();
+        String input = scan.nextLine();
 
         while (Integer.parseInt(input) < 0 || Integer.parseInt(input) > (data.size() + 1))
         {
             System.out.print("\nPlease enter a valid index\n> ");
-            input = scan.next();
+            input = scan.nextLine();
         }
         return Integer.parseInt(input);
     }
 
     private void debug()
     {
+        System.out.println();
         for (int count = 0; count < data.size(); ++count)
         {
-            data.elementAt(count).toString();
-            System.out.println();
+            System.out.println(data.elementAt(count).toString());
         }
         System.out.println();
     }

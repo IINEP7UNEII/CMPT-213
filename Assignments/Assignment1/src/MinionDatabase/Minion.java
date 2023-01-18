@@ -46,7 +46,7 @@ public class Minion
     @Override
     public String toString() 
     {
-		return getClass().getName() + "\t[Name: " + name + " Height: "
-        + height + "EvilDeeds: " + evilDeeds + ']';
+		return getClass().getName() + " >\t[Name: " + name + " | Height: "
+        + height + " | EvilDeeds: " + evilDeeds + ']';
 	}
 }
