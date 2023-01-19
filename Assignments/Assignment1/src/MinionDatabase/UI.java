@@ -153,11 +153,8 @@ public class UI
 
         if (input != 0)
         {
-            System.out.print("\nEnter amount of evil deeds to increment by\n> ");
-            int amount = Integer.parseInt(scan.nextLine());
-            amount += data.elementAt(input - 1).getEvilDeeds();
-
-            data.elementAt(input - 1).setEvilDeeds(amount);
+            int amount = data.elementAt(input - 1).getEvilDeeds();
+            data.elementAt(input - 1).setEvilDeeds(++amount);
             System.out.println("Increment successful!\n");
         }
         else
