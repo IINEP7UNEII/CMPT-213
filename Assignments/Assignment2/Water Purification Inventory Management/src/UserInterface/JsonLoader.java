@@ -30,9 +30,9 @@ public class JsonLoader
                 System.out.println(jsonObject);
             }
         } 
-        catch (IOException | ParseException e)
+        catch (IOException | ParseException exception) 
         {
-            e.printStackTrace();
+            exception.printStackTrace();
         }
         scan.close();
     }
