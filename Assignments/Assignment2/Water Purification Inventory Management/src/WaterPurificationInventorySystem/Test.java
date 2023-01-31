@@ -3,13 +3,52 @@ package WaterPurificationInventorySystem;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Tester 
+public class Test 
 {
-    public void test(Unit unit)
+    private String date;
+    private Boolean status;
+    private String comment;
+
+    public Test()
     {
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
-        String date = dateFormat.format(new Date());
+        date = dateFormat.format(new Date());
+        status = false;
+        comment = "";
+    }
 
+    public String getDate()
+    {
+        return date;
+    }
+
+    public void setDate(String d)
+    {
+        date = d;
+    }
+
+    public Boolean getStatus()
+    {
+        return status;
+    }
+
+    public void setModel(Boolean s)
+    {
+        status = s;
+    }
+
+    public String getComment()
+    {
+        return comment;
+    }
+
+    public void setComment(String status)
+    {
+        comment = status;
+    }
+
+    public void tester(Unit unit)
+    {
         System.out.println("Date: " + date);
         System.out.println("Serial number test: ");
         if (testSerialNumberString(unit.getSerialNumber(), unit.getSerialNumber().length()))

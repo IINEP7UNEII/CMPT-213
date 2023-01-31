@@ -1,10 +1,13 @@
 package WaterPurificationInventorySystem;
 
+import java.util.Vector;
+
 public class Unit 
 {
     private String serialNumber;
     private String model;
     private boolean shipped;
+    private Vector<Test> tests;
 
     public Unit()
     {
@@ -41,5 +44,10 @@ public class Unit
     public void setShippedStatus(boolean status)
     {
         shipped = status;
+    }
+
+    public Vector<Test> getTests()
+    {
+        return tests;
     }
 }
