@@ -32,5 +32,4 @@
 *.app
 
 # Other
-*.json
 *.code-workspace
