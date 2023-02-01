@@ -47,31 +47,6 @@ public class Test
         comment = status;
     }
 
-    public void tester(Unit unit)
-    {
-        System.out.println("Date: " + date);
-        System.out.println("Serial number test: ");
-        if (testSerialNumberString(unit.getSerialNumber(), unit.getSerialNumber().length()))
-        {
-            System.out.print("Passed! All checks completed!");
-        }
-        else
-        {
-            System.out.print("Failed!\nPlease check that the serial number only contains"
-            + "\ndigits, is 3 to 15 digits long, and passes the checksum test!");
-        }
-
-        System.out.println("\nModel name test: ");
-        if (testModelString(unit.getModel()))
-        {
-            System.out.print("Passed! All checks completed!");
-        }
-        else
-        {
-            System.out.print("Failed!\nPlease check that the model name is up to 10 characters long!");
-        }
-    }
-
     private boolean testSerialNumberString(String serial, int length)
     {
         if ((length < 3 || length > 15)

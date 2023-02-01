@@ -14,6 +14,7 @@ public class Unit
         serialNumber = "";
         model = "";
         shipped = false;
+        tests = new Vector<Test>();
     }
 
     public String getSerialNumber()
