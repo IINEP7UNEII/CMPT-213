@@ -6,15 +6,16 @@ import java.util.Date;
 public class Test 
 {
     private String date;
-    private Boolean status;
-    private String comment;
+    private Boolean isTestPassed;
+    private String testResultComment;
 
     public Test()
     {
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
         date = dateFormat.format(new Date());
-        status = false;
-        comment = "";
+        date = "-";
+        isTestPassed = false;
+        testResultComment = "";
     }
 
     public String getDate()
@@ -29,22 +30,22 @@ public class Test
 
     public Boolean getStatus()
     {
-        return status;
+        return isTestPassed;
     }
 
-    public void setModel(Boolean s)
+    public void setStatus(Boolean s)
     {
-        status = s;
+        isTestPassed = s;
     }
 
     public String getComment()
     {
-        return comment;
+        return testResultComment;
     }
 
     public void setComment(String status)
     {
-        comment = status;
+        testResultComment = status;
     }
 
     private boolean testSerialNumberString(String serial, int length)

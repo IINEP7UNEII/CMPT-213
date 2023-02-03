@@ -1,9 +1,8 @@
 package UserInterface;
 
 import WaterPurificationInventorySystem.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 /**
 * Description: The UI class is used to create a database of Unit objects
@@ -19,14 +18,14 @@ import java.util.Scanner;
 
 public class UI 
 {
-    private JSONArray data;
+    private ArrayList<Unit> data;
     private Scanner scan;
     private JsonLoader loader;
 
     public UI()
     { 
         scan = new Scanner(System.in);
-        data = new JSONArray();
+        data = new ArrayList<Unit>();
         loader = new JsonLoader();
     }
 
@@ -57,7 +56,7 @@ public class UI
 
     private void mainMenu()
     {
-        System.out.println("Please select an option:");
+        System.out.println("\nPlease select an option:");
         System.out.println("1) Read JSON input file");
         System.out.println("2) Display unit info");
         System.out.println("3) Create unit");
@@ -76,11 +75,11 @@ public class UI
         {
             case 1:
                 readJSON();
-                mainMenu(); //done
+                mainMenu();
                 break;
             case 2:
-                displayInfo();
-                mainMenu(); //done
+                displayInfoSelection();
+                mainMenu();
                 break;
             // case 3:
             //     createUnit();
@@ -103,14 +102,14 @@ public class UI
             //     mainMenu();
             //     break;
             case 8:
-                exit(); //done
+                exit();
                 break;
         }
     }
 
     private String inputFilePath()
     {
-        System.out.println("Enter the path of the JSON file: ");
+        System.out.println("Enter the full path of the JSON file: ");
         String filePath = scan.nextLine();
         return filePath;
     }
@@ -119,11 +118,30 @@ public class UI
     {
         String path = inputFilePath();
         data = loader.loadJson(scan, path);
+        System.out.println("Read " + data.size() + " products from JSON file \"" + path + "\"");
     }
 
-    private void displayInfo()
+    private void displayInfoSelection()
     {
-        System.out.println("\nList of Water Purification Units:");
+        System.out.println("Enter the serial number (0 for list, -1 for cancel): ");
+        String input = scan.nextLine();
+        
+        switch (input)
+        {
+            case "-1":
+                break;
+            case "0":
+                displayGeneralInfo();
+                break;
+            default:
+                displayUnitInfo(input);
+                break;
+        }
+    }
+
+    private void displayGeneralInfo()
+    {
+        System.out.println("\n\nList of Water Purification Units:");
         System.out.println("*********************************");
 
         if (data.size() == 0)
@@ -135,13 +153,46 @@ public class UI
             System.out.println("     Model           Serial     # Tests   Ship Date");
             System.out.println("----------  ---------------  ----------  ----------");
 
-            for (Object o : data) //continue separating json things into categories and putting those into Unit categories in readJSON()
+            String modelFormat = "%10.10s";
+            String serialFormat = "%17.17s";
+            String testsFormat = "%12.12s";
+            String shipFormat = "%12.12s";
+
+            for (Unit unit : data)
             {
-                JSONObject jsonObject = (JSONObject) o;
-                System.out.println(jsonObject);
-                System.out.println("\n\n\n");
+                System.out.format(modelFormat, unit.getModel());
+                System.out.format(serialFormat, unit.getSerialNumber());
+                System.out.format(testsFormat, unit.getTests().size());
+                System.out.format(shipFormat, unit.getDateShipped());
+                System.out.println();
             }
             System.out.println();
+        }
+    }
+
+    private void displayUnitInfo(String serial)
+    {
+        for (Unit unit : data)
+        {
+            if (unit.getSerialNumber().equals(serial))
+            {
+                System.out.println("Unit info:");
+                System.out.println("**********");
+
+                String unitFormat = "%11.11s";
+                System.out.print("Serial:");
+                System.out.format(unitFormat, unit.getSerialNumber());
+                System.out.print("Model:");
+                System.out.format(unitFormat, unit.getModel());
+                System.out.print("Ship date:");
+                System.out.format(unitFormat, unit.getDateShipped());
+
+                System.out.println("\nTests:");
+                System.out.println("******");
+
+                System.out.println("     Date           Passed?     Test Comments");
+                System.out.println("---------  ----------------  ----------------");
+            }
         }
     }
 

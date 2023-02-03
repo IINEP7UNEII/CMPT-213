@@ -1,20 +1,20 @@
 package WaterPurificationInventorySystem;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class Unit 
 {
     private String serialNumber;
     private String model;
-    private boolean shipped;
-    private Vector<Test> tests;
+    private String dateShipped;
+    private ArrayList<Test> tests;
 
     public Unit()
     {
         serialNumber = "";
         model = "";
-        shipped = false;
-        tests = new Vector<Test>();
+        dateShipped = "-";
+        tests = new ArrayList<Test>();
     }
 
     public String getSerialNumber()
@@ -37,18 +37,23 @@ public class Unit
         model = name;
     }
 
-    public boolean getShippedStatus()
+    public String getDateShipped()
     {
-        return shipped;
+        return dateShipped;
     }
 
-    public void setShippedStatus(boolean status)
+    public void setDateShipped(String shipped)
     {
-        shipped = status;
+        dateShipped = shipped;
     }
 
-    public Vector<Test> getTests()
+    public ArrayList<Test> getTests()
     {
         return tests;
+    }
+
+    public void setTests(ArrayList<Test> newTests)
+    {
+        tests = newTests;
     }
 }
