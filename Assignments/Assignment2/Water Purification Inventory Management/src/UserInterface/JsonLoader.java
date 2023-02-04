@@ -73,7 +73,14 @@ public class JsonLoader
             Test newTest = new Test();
 
             newTest.setDate((String) testObject.get("date"));
-            newTest.setStatus((Boolean) testObject.get("isTestPassed"));
+            if ((Boolean) testObject.get("isTestPassed"))
+            {
+                newTest.setStatus("Passed");
+            }
+            else
+            {
+                newTest.setStatus("FAILED");
+            }
             newTest.setComment((String) testObject.get("testResultComment"));
 
             testsForUnit.add(newTest);

@@ -6,7 +6,7 @@ import java.util.Date;
 public class Test 
 {
     private String date;
-    private Boolean isTestPassed;
+    private String status;
     private String testResultComment;
 
     public Test()
@@ -14,8 +14,8 @@ public class Test
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
         date = dateFormat.format(new Date());
         date = "-";
-        isTestPassed = false;
-        testResultComment = "";
+        status = "-";
+        testResultComment = "-";
     }
 
     public String getDate()
@@ -28,14 +28,14 @@ public class Test
         date = d;
     }
 
-    public Boolean getStatus()
+    public String getStatus()
     {
-        return isTestPassed;
+        return status;
     }
 
-    public void setStatus(Boolean s)
+    public void setStatus(String s)
     {
-        isTestPassed = s;
+        status = s;
     }
 
     public String getComment()
@@ -48,7 +48,7 @@ public class Test
         testResultComment = status;
     }
 
-    private boolean testSerialNumberString(String serial, int length)
+    public boolean isValidSerialString(String serial, int length)
     {
         if ((length < 3 || length > 15)
         || !onlyDigits(serial, length)
@@ -59,7 +59,7 @@ public class Test
         return true;
     }
 
-    private boolean testModelString(String model)
+    public boolean isValidModelString(String model)
     { 
         if (model.length() > 10)
         {
