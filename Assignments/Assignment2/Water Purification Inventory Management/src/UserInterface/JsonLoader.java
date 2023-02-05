@@ -14,23 +14,22 @@ import org.json.simple.parser.ParseException;
 public class JsonLoader 
 {
     private JSONArray dataJSON;
-    private ArrayList<Unit> units;
 
     public JsonLoader()
     { 
         dataJSON = new JSONArray();
-        units = new ArrayList<Unit>();
     }
 
     public ArrayList<Unit> loadJson(Scanner scan, String filePath)
     {
+        ArrayList<Unit> units = new ArrayList<Unit>();
         JSONParser parser = new JSONParser();
 
         try (FileReader reader = new FileReader(filePath)) 
         {
             Object obj = parser.parse(reader);
             dataJSON = (JSONArray) obj;
-            listThroughJSONUnits();
+            units = listThroughJSONUnits(units);
         } 
         catch (IOException | ParseException exception) 
         {
@@ -39,7 +38,7 @@ public class JsonLoader
         return units;
     }
 
-    private ArrayList<Unit> listThroughJSONUnits()
+    private ArrayList<Unit> listThroughJSONUnits(ArrayList<Unit> units)
     {
         for (Object jsonObject : dataJSON)
         {
@@ -58,7 +57,6 @@ public class JsonLoader
             newUnit.setTests(listThroughUnitTests(unitObject, newUnit));
             units.add(newUnit);
         }
-
         return units;
     }
 
@@ -85,7 +83,6 @@ public class JsonLoader
 
             testsForUnit.add(newTest);
         }
-
         return testsForUnit;
     }
 }

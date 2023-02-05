@@ -3,6 +3,8 @@ package UserInterface;
 import WaterPurificationInventorySystem.*;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
 * Description: The UI class is used to create a database of Unit objects
@@ -51,12 +53,12 @@ public class UI
     private void title()
     {
         System.out.println("|Welcome to the Water Purification Unit Databse by Daniel Tolsky|");
-        System.out.println("*****************************************************************");
+        System.out.println("*****************************************************************\n");
     }
 
     private void mainMenu()
     {
-        System.out.println("\nPlease select an option:");
+        System.out.println("Please select an option:");
         System.out.println("1) Read JSON input file");
         System.out.println("2) Display unit info");
         System.out.println("3) Create unit");
@@ -73,31 +75,31 @@ public class UI
         int descision = choiceHandle();
         switch (descision)
         {
-            case 1:
+            case 1: // 1) Read JSON input file
                 readJSON();
                 mainMenu();
                 break;
-            case 2:
-                displayInfoSelection();
+            case 2: // 2) Display unit info
+                displayInfoSelection(2);
                 mainMenu();
                 break;
-            case 3:
+            case 3: // 3) Create unit
                 createUnit();
                 mainMenu();
                 break;
-            // case 4:
-            //     testUnit();
-            //     mainMenu();
-            //     break;
-            // case 5:
-            //     shipUnit();
-            //     mainMenu();
-            //     break;
-            // case 6:
-            //     printReport();
-            //     mainMenu();
-            //     break;
-            // case 7:
+            case 4: // 4) Test unit
+                displayInfoSelection(4);
+                mainMenu();
+                break;
+            case 5: // 5) Ship a unit
+                displayInfoSelection(5);
+                mainMenu();
+                break;
+            case 6: // 6) Print report
+                printReport();
+                mainMenu();
+                break;
+            // case 7: // 7) Set report sort order
             //     setOrder();
             //     mainMenu();
             //     break;
@@ -111,7 +113,7 @@ public class UI
     {
         System.out.print("Enter the full path of the JSON file:\n> ");
         String filePath = scan.nextLine();
-        //System.out.println();
+        System.out.println();
         return filePath;
     }
 
@@ -119,13 +121,14 @@ public class UI
     {
         String path = inputFilePath();
         data = loader.loadJson(scan, path);
-        System.out.println("Read " + data.size() + " products from JSON file \"" + path + "\"");
+        System.out.println("Read " + data.size() + " products from JSON file \"" + path + "\"\n");
     }
 
-    private void displayInfoSelection()
+    private void displayInfoSelection(int prevMenu)
     {
         System.out.print("Enter the serial number (0 for list, -1 for cancel):\n> ");
         String input = scan.nextLine();
+        System.out.println();
         
         switch (input)
         {
@@ -133,17 +136,28 @@ public class UI
                 break;
             case "0":
                 displayGeneralInfo();
-                displayInfoSelection();
+                displayInfoSelection(prevMenu);
                 break;
             default:
-                displayUnitInfo(input);
+                switch (prevMenu)
+                {
+                    case 2: //coming from Display unit info
+                        displayUnitInfo(input);
+                        break;
+                    case 4: //coming from Test unit
+                        testUnit(input);
+                        break;
+                    case 5: //coming from Ship unit
+                        shipUnit(input);
+                        break;
+                }
                 break;
         }
     }
 
     private void displayGeneralInfo()
     {
-        System.out.println("\nList of Water Purification Units:");
+        System.out.println("List of Water Purification Units:");
         System.out.println("*********************************");
 
         if (data.size() == 0)
@@ -177,7 +191,7 @@ public class UI
         {
             if (unit.getSerialNumber().equals(serial))
             {
-                System.out.println("\nUnit info:");
+                System.out.println("Unit info:");
                 System.out.println("**********");
 
                 System.out.print("   Serial: " + unit.getSerialNumber());
@@ -195,6 +209,7 @@ public class UI
                     System.out.println("  " + test.getDate() + "    " + test.getStatus()
                     + "  " + test.getComment());
                 }
+                System.out.println();
                 
                 return;
             }
@@ -205,7 +220,6 @@ public class UI
     private void createUnit()
     {
         Unit newUnit = new Unit();
-        Test tempTest = new Test();
 
         System.out.println("\nEnter product info; blank line to quit.");
         System.out.print("Model: ");
@@ -216,7 +230,7 @@ public class UI
             return;
         }
 
-        while (!tempTest.isValidModelString(input))
+        while (!newUnit.isValidModelString(input))
         {
             System.out.println("Unable to add the product!");
             System.out.println("\t>Model Error: String must be between 0 and 10 characters (inclusive).<");
@@ -240,10 +254,17 @@ public class UI
             return;
         }
 
-        while (!tempTest.isValidSerialString(input, input.length()))
+        while (!newUnit.isValidSerialString(input, input.length()) || serialExists(input))
         {
             System.out.println("Unable to add the product!");
-            System.out.println("\t>Serial Number Error: Checksum does not match.<");
+            if (!newUnit.isValidSerialString(input, input.length()))
+            {
+                System.out.println("\t>Serial Number Error: Checksum does not match.<");
+            }
+            else
+            {
+                System.out.println("\t>Serial Number Error: Serial number already exists in the system.<");
+            }
             System.out.println("\tPlease try again.");
 
             System.out.print("Serial number: ");
@@ -255,7 +276,20 @@ public class UI
             }
         }
         newUnit.setSerialNumber(input);
-        tempTest = null;
+        data.add(newUnit);
+        System.out.println("New unit added successfully!\n");
+    }
+
+    private Boolean serialExists(String serial)
+    {
+        for (Unit unit : data)
+        {
+            if (unit.getSerialNumber().equals(serial))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Boolean isBlankString(String str)
@@ -267,77 +301,72 @@ public class UI
         return false;
     }
 
-    // private void testUnit()
-    // {
-    //     displayInfo();
+    private void testUnit(String serial)
+    {
+        for (Unit unit : data)
+        {
+            if (unit.getSerialNumber().equals(serial))
+            {
+                System.out.println("New test:");
+                System.out.println("**********");
+                Test newTest = new Test();
 
-    //     System.out.println("Date: " + unit.getDate());
-    //     System.out.println("Serial number test: ");
-    //     if (testSerialNumberString(unit.getSerialNumber(), unit.getSerialNumber().length()))
-    //     {
-    //         System.out.print("Passed! All checks completed!");
-    //     }
-    //     else
-    //     {
-    //         System.out.print("Failed!\nPlease check that the serial number only contains"
-    //         + "\ndigits, is 3 to 15 digits long, and passes the checksum test!");
-    //     }
+                System.out.print("Pass? (Y/n): ");
+                String input = scan.nextLine();
+                if (input.equals("y") || input.equals("Y"))
+                {
+                    newTest.setStatus("Passed");
+                }
+                else if (input.equals("n") || input.equals("N"))
+                {
+                    newTest.setStatus("FAILED");
+                }
 
-    //     System.out.println("\nModel name test: ");
-    //     if (testModelString(unit.getModel()))
-    //     {
-    //         System.out.print("Passed! All checks completed!");
-    //     }
-    //     else
-    //     {
-    //         System.out.print("Failed!\nPlease check that the model name is up to 10 characters long!");
-    //     }
-    // }
+                System.out.print("Comment: ");
+                input = scan.nextLine();
+                newTest.setComment(input);
 
-    // private void shipUnit()
-    // {
-    //     displayInfo();
+                unit.addTest(newTest);
+                System.out.println("Test recorded!\n");
+        
+                return;
+            }
+        }
+        System.out.println(">Serial number not found in the system! Returning to main menu...<\n");
+    }
 
-    //     System.out.print("Enter index of minion you wish to increment the number of evil needs of (0 to cancel)\n> ");
-    //     int input = selectFromListHandle();
+    private void shipUnit(String serial)
+    {
+        for (Unit unit : data)
+        {
+            if (unit.getSerialNumber().equals(serial))
+            {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String date = dateFormat.format(new Date());
+                unit.setDateShipped(date);
+                System.out.println("Unit shipped out and updated successfully!\n");
+        
+                dateFormat = null;
+                date = null;
+                return;
+            }
+        }
+        System.out.println(">Serial number not found in the system! Returning to main menu...<\n");
+    }
 
-    //     if (input != 0)
-    //     {
-    //         int amount = data.elementAt(input - 1).getEvilDeeds();
-    //         data.elementAt(input - 1).setEvilDeeds(++amount);
-    //         System.out.println("Increment successful!\n");
-    //     }
-    //     else
-    //     {
-    //         System.out.println("Canceled\n");
-    //     }
-    // }
-
-    // private int selectFromListHandle()
-    // {
-    //     String input = scan.nextLine();
-
-    //     while (Integer.parseInt(input) < 0 || Integer.parseInt(input) > (data.size() + 1))
-    //     {
-    //         System.out.print("\nPlease enter a valid index\n> ");
-    //         input = scan.nextLine();
-    //     }
-    //     return Integer.parseInt(input);
-    // }
+    private void printReport() // continue from scratch
+    {
+        System.out.println();
+        for (int count = 0; count < data.size(); ++count)
+        {
+            System.out.println(data.elementAt(count).toString());
+        }
+        System.out.println();
+    }
 
     // private void setOrder()
     // {
 
-    // }
-
-    // private void printReport()
-    // {
-    //     System.out.println();
-    //     for (int count = 0; count < data.size(); ++count)
-    //     {
-    //         System.out.println(data.elementAt(count).toString());
-    //     }
-    //     System.out.println();
     // }
 
     private static void exit()
