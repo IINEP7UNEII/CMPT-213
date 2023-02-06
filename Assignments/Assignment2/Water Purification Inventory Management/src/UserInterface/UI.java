@@ -95,10 +95,10 @@ public class UI
                 displayInfoSelection(5);
                 mainMenu();
                 break;
-            // case 6: // 6) Print report
-            //     printReport();
-            //     mainMenu();
-            //     break;
+            case 6: // 6) Print report
+                printReport();
+                mainMenu();
+                break;
             case 7: // 7) Set report sort order
                 setOrder();
                 mainMenu();
@@ -354,15 +354,15 @@ public class UI
         System.out.println(">Serial number not found in the system! Returning to main menu...<\n");
     }
 
-    // private void printReport()
-    // {
-    //     System.out.println();
-    //     for (int count = 0; count < data.size(); ++count)
-    //     {
-    //         System.out.println(data.elementAt(count).toString());
-    //     }
-    //     System.out.println();
-    // }
+    private void printReport()
+    {
+        System.out.println();
+        for (int count = 0; count < data.size(); ++count)
+        {
+            System.out.println(data.elementAt(count).toString());
+        }
+        System.out.println();
+    }
 
     private void setOrder()
     {
