@@ -37,12 +37,12 @@ public class UI
         mainMenu();
     }
 
-    private int choiceHandle()
+    private int choiceHandle(int minOption, int maxOption)
     {
         System.out.print("Please select an option:\n> ");
         int input = Integer.parseInt(scan.nextLine());
 
-        while (input < 1 || input > 8)
+        while (input < minOption || input > maxOption)
         {
             System.out.print(">Please select an option listed below<\n> ");
             input = Integer.parseInt(scan.nextLine());
@@ -72,7 +72,7 @@ public class UI
 
     private void menuDescision()
     {
-        int descision = choiceHandle();
+        int descision = choiceHandle(1, 8);
         switch (descision)
         {
             case 1: // 1) Read JSON input file
@@ -95,14 +95,14 @@ public class UI
                 displayInfoSelection(5);
                 mainMenu();
                 break;
-            case 6: // 6) Print report
-                printReport();
-                mainMenu();
-                break;
-            // case 7: // 7) Set report sort order
-            //     setOrder();
+            // case 6: // 6) Print report
+            //     printReport();
             //     mainMenu();
             //     break;
+            case 7: // 7) Set report sort order
+                setOrder();
+                mainMenu();
+                break;
             case 8:
                 exit();
                 break;
@@ -354,20 +354,33 @@ public class UI
         System.out.println(">Serial number not found in the system! Returning to main menu...<\n");
     }
 
-    private void printReport() // continue from scratch
-    {
-        System.out.println();
-        for (int count = 0; count < data.size(); ++count)
-        {
-            System.out.println(data.elementAt(count).toString());
-        }
-        System.out.println();
-    }
-
-    // private void setOrder()
+    // private void printReport()
     // {
-
+    //     System.out.println();
+    //     for (int count = 0; count < data.size(); ++count)
+    //     {
+    //         System.out.println(data.elementAt(count).toString());
+    //     }
+    //     System.out.println();
     // }
+
+    private void setOrder()
+    {
+        System.out.println("\nSelect sort order:");
+        System.out.println("1) Sort by serial number");
+        System.out.println("2) Sort by model, then by serial number");
+        System.out.println("3) Sort by most recent test date");
+        System.out.println("4) Cancel");
+        int input = choiceHandle(1, 4);
+        System.out.println();
+
+        if (!(input == 4))
+        {
+            Sorter sorter = new Sorter();
+            sorter.setOrder(input);
+            sorter.sortUnits(data);
+        }
+    }
 
     private static void exit()
     {
