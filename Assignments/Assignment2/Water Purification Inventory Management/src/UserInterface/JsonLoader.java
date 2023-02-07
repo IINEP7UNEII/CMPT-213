@@ -11,6 +11,15 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+/**
+* Description: This JsonLoader class handles the loading of water purification unit data
+* from a JSON file into the Water Purification Inventory System database. The correct
+* formating of the objects are handled within this class for easier use in the UI class.
+*
+* @author Daniel Tolsky
+* @version 1.0
+*/
+
 public class JsonLoader 
 {
     private JSONArray dataJSON;
@@ -33,7 +42,7 @@ public class JsonLoader
         } 
         catch (IOException | ParseException exception) 
         {
-            exception.printStackTrace();
+            System.out.println(">File not found; please verify that the file location is a full path to the file<");
         }
         return units;
     }

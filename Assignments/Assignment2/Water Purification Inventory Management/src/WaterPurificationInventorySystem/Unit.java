@@ -2,6 +2,15 @@ package WaterPurificationInventorySystem;
 
 import java.util.ArrayList;
 
+/**
+* Description: This Unit class holds the base object which the Water Purification Inventory System
+* handles. It contains the specific data to a single Water Purification Unit and has some mehods
+* do handle and check this data.
+*
+* @author Daniel Tolsky
+* @version 1.0
+*/
+
 public class Unit 
 {
     private String serialNumber;
@@ -84,9 +93,8 @@ public class Unit
 
     private boolean checksumSerialNumber(String serial, int length)
     {
-        int serialInt = Integer.parseInt(serial);
-        int lastTwo = serialInt % 100;
-
+        long serialLong = Long.parseLong(serial);
+        int lastTwo = (int) (serialLong % 100);
         int sumOfPrevious = 0;
 
         for (int count = 0; count < length - 2; ++count) 
@@ -103,12 +111,13 @@ public class Unit
 
     private boolean onlyDigits(String serial, int length)
     {
-        for (int count = 0; count < length; ++count) 
+        try
         {
-            if (serial.charAt(count) < '0' || serial.charAt(count) > '9') 
-            {
-                return false;
-            }
+            Long.parseLong(serial);
+        }
+        catch (NumberFormatException exception)
+        {
+            return false;
         }
         return true;
     }

@@ -8,8 +8,9 @@ import java.util.Date;
 
 /**
 * Description: The UI class is used to create a database of Unit objects
-* and has several menus to interact with said database. Use with the Unit 
-* class in the WaterPurificationInventorySystem package.
+* and has several menus to interact with said database. Use with the Unit, Test, Sorter 
+* class in the WaterPurificationInventorySystem package and the JsonLoader class in this 
+* UserInterface package.
 *
 * This class and many of its features were inspired by the UI class
 * which I myself created in assignment 1.
@@ -129,13 +130,14 @@ public class UI
         System.out.print("Enter the serial number (0 for list, -1 for cancel):\n> ");
         String input = scan.nextLine();
         System.out.println();
+        String title = "List of Water Purification Units:\n*********************************";
         
         switch (input)
         {
             case "-1":
                 break;
             case "0":
-                displayGeneralInfo();
+                displayGeneralInfo(title, 1); //print all
                 displayInfoSelection(prevMenu);
                 break;
             default:
@@ -155,10 +157,9 @@ public class UI
         }
     }
 
-    private void displayGeneralInfo()
+    private void displayGeneralInfo(String menuTitleName, int filter) //filter: 1) all 2) defective 3) ready to ship
     {
-        System.out.println("List of Water Purification Units:");
-        System.out.println("*********************************");
+        System.out.println(menuTitleName);
 
         if (data.size() == 0)
         {
@@ -168,7 +169,6 @@ public class UI
         {
             System.out.println("     Model           Serial     # Tests   Ship Date");
             System.out.println("----------  ---------------  ----------  ----------");
-
             String modelFormat = "%10.10s";
             String serialFormat = "%17.17s";
             String testsFormat = "%12.12s";
@@ -176,13 +176,29 @@ public class UI
 
             for (Unit unit : data)
             {
-                System.out.format(modelFormat, unit.getModel());
-                System.out.format(serialFormat, unit.getSerialNumber());
-                System.out.format(testsFormat, unit.getTests().size());
-                System.out.format(shipFormat, unit.getDateShipped());
-                System.out.println();
+                if (filter == 1) //all
+                {
+                    displayWithFormat(modelFormat, serialFormat, testsFormat, shipFormat, unit);
+                }
+                else if (filter == 2 && !getLastTestStatus(unit)) // if defective (last test not passed)
+                {
+                    displayWithFormat(modelFormat, serialFormat, testsFormat, shipFormat, unit);
+                }
+                else if (filter == 3 && getLastTestStatus(unit) && unit.getDateShipped().equals("-")) //if ready to ship (pass test, not shipped)
+                {
+                    displayWithFormat(modelFormat, serialFormat, testsFormat, shipFormat, unit);
+                }
             }
         }
+    }
+
+    private void displayWithFormat(String modelFormat, String serialFormat, String testsFormat, String shipFormat, Unit unit)
+    {
+        System.out.format(modelFormat, unit.getModel());
+        System.out.format(serialFormat, unit.getSerialNumber());
+        System.out.format(testsFormat, unit.getTests().size());
+        System.out.format(shipFormat, unit.getDateShipped());
+        System.out.println();
     }
 
     private void displayUnitInfo(String serial)
@@ -193,24 +209,28 @@ public class UI
             {
                 System.out.println("Unit info:");
                 System.out.println("**********");
-
                 System.out.print("   Serial: " + unit.getSerialNumber());
                 System.out.print("\n    Model: " + unit.getModel());
                 System.out.print("\nShip date: " + unit.getDateShipped());
 
-                System.out.println("\n\nTests:");
-                System.out.println("******");
-
-                System.out.println("        Date   Passed?  Test Comments");
-                System.out.println("------------  --------  -------------");
-
-                for (Test test : unit.getTests())
+                if (unit.getTests().size() > 0)
                 {
-                    System.out.println("  " + test.getDate() + "    " + test.getStatus()
-                    + "  " + test.getComment());
+                    System.out.println("\n\nTests:");
+                    System.out.println("******");
+                    System.out.println("        Date   Passed?  Test Comments");
+                    System.out.println("------------  --------  -------------");
+
+                    for (Test test : unit.getTests())
+                    {
+                        System.out.println("  " + test.getDate() + "    "
+                        + test.getStatus() + "  " + test.getComment());
+                    }
+                }
+                else
+                {
+                    System.out.println("\nNo tests to display!");
                 }
                 System.out.println();
-                
                 return;
             }
         }
@@ -220,25 +240,16 @@ public class UI
     private void createUnit()
     {
         Unit newUnit = new Unit();
-
         System.out.println("\nEnter product info; blank line to quit.");
         System.out.print("Model: ");
         String input = scan.nextLine();
-
         if (isBlankString(input))
         {
             return;
         }
-
         while (!newUnit.isValidModelString(input))
         {
-            System.out.println("Unable to add the product!");
-            System.out.println("\t>Model Error: String must be between 0 and 10 characters (inclusive).<");
-            System.out.println("\tPlease try again.");
-
-            System.out.print("\nModel: ");
-            input = scan.nextLine();
-    
+            input = unableAddModel();
             if (isBlankString(input))
             {
                 return;
@@ -248,28 +259,13 @@ public class UI
 
         System.out.print("Serial number: ");
         input = scan.nextLine();
-
         if (isBlankString(input))
         {
             return;
         }
-
         while (!newUnit.isValidSerialString(input, input.length()) || serialExists(input))
         {
-            System.out.println("Unable to add the product!");
-            if (!newUnit.isValidSerialString(input, input.length()))
-            {
-                System.out.println("\t>Serial Number Error: Checksum does not match.<");
-            }
-            else
-            {
-                System.out.println("\t>Serial Number Error: Serial number already exists in the system.<");
-            }
-            System.out.println("\tPlease try again.");
-
-            System.out.print("Serial number: ");
-            input = scan.nextLine();
-    
+            input = unableAddSerial();
             if (isBlankString(input))
             {
                 return;
@@ -278,6 +274,38 @@ public class UI
         newUnit.setSerialNumber(input);
         data.add(newUnit);
         System.out.println("New unit added successfully!\n");
+    }
+
+    private String unableAddModel()
+    {
+        System.out.println("Unable to add the product!");
+        System.out.println("\t>Model Error: String must be between 0 and 10 characters (inclusive).<");
+        System.out.println("\tPlease try again.");
+
+        System.out.print("\nModel: ");
+        String input = scan.nextLine();
+        return input;
+    }
+
+    private String unableAddSerial()
+    {
+        Unit tempUnit = new Unit();
+        String input = "";
+        System.out.println("Unable to add the product!");
+        if (!tempUnit.isValidSerialString(input, input.length()))
+        {
+            System.out.println("\t>Serial Number Error: Checksum does not match.<");
+        }
+        else
+        {
+            System.out.println("\t>Serial Number Error: Serial number already exists in the system.<");
+        }
+        System.out.println("\tPlease try again.");
+
+        System.out.print("Serial number: ");
+        input = scan.nextLine();
+        tempUnit = null;
+        return input;
     }
 
     private Boolean serialExists(String serial)
@@ -313,7 +341,7 @@ public class UI
 
                 System.out.print("Pass? (Y/n): ");
                 String input = scan.nextLine();
-                if (input.equals("y") || input.equals("Y"))
+                if (input.equals("y") || input.equals("Y") || input.equals("") || input.equals(" "))
                 {
                     newTest.setStatus("Passed");
                 }
@@ -356,12 +384,53 @@ public class UI
 
     private void printReport()
     {
+        System.out.println("\nSelect repot option:");
+        System.out.println("1) ALL:\t\t\tAll products");
+        System.out.println("2) DEFECTIVE:\t\tProducts which failed their last test");
+        System.out.println("3) READY-TO-SHIP\tProducts which passed their test, not shipped");
+        System.out.println("4) Cancel");
+        int input = choiceHandle(1, 4);
         System.out.println();
-        for (int count = 0; count < data.size(); ++count)
+        String title = "";
+
+        switch (input)
         {
-            System.out.println(data.elementAt(count).toString());
+            case 1:
+                title = "List of Water Purification Units:\n*********************************";
+                break;
+
+            case 2:
+                title = "DEFECTIVE Water Purification Units:\n***********************************";
+                break;
+
+            case 3:
+                title = "READ-TO-SHIP Water Purification Units:\n**************************************";
+                break;
+
+            default:
+                break;
         }
+        displayGeneralInfo(title, input);
         System.out.println();
+    }
+
+    private Boolean getLastTestStatus(Unit unit) //false if unit is defective, true otherwise
+    {
+        ArrayList<Test> tempTestList = unit.getTests();
+        int size = tempTestList.size();
+
+        if (size == 0)
+        {
+            return true;
+        }
+
+        String status = tempTestList.get(size - 1).getStatus();
+
+        if (status == "FAILED")
+        {
+            return false;
+        }
+        return true;
     }
 
     private void setOrder()

@@ -3,6 +3,16 @@ package WaterPurificationInventorySystem;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+* Description: This Test class handles the information and format of a single test used
+* for the Water Purification System Units. It has some data elements which hold the
+* necessary information for the test which are done on said units. Mehods are provided
+* to handle the specific data for each test.
+*
+* @author Daniel Tolsky
+* @version 1.0
+*/
+
 public class Test 
 {
     private String date;

@@ -7,6 +7,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+* Description: This Sorter class is mainly used for the setOrder() function in the UI.java file.
+* This class handle all the operations for sorting the Water Purification Unit data in the desired order.
+* This class also includes a UnitComparator class which implements a comparator who's operations 
+* could be specified (using the setOrder() function) to  handle different types of data which need to be sorted
+* for the database.
+*
+* @author Daniel Tolsky
+* @version 1.0
+*/
+
 public class Sorter 
 {
     private int sortOrder;
@@ -77,7 +88,6 @@ class UnitComparator implements Comparator<Unit>
     public int compare(Unit a, Unit b)
     {
         long result = 0;
-
         try 
         {
             switch (order)
@@ -85,7 +95,6 @@ class UnitComparator implements Comparator<Unit>
                 case 1:
                     result = compareLong(getStringLexiValue(a.getSerialNumber()), getStringLexiValue(b.getSerialNumber()));
                     break;
-
                 case 2:
                     result = compareLong(getStringLexiValue(a.getModel()), getStringLexiValue(b.getModel()));
                     if (result == 0)
@@ -93,11 +102,9 @@ class UnitComparator implements Comparator<Unit>
                         result = compareLong(getStringLexiValue(a.getSerialNumber()), getStringLexiValue(b.getSerialNumber()));
                     }
                     break;
-
                 case 3:
                     result = compareDate(a, b);
                     break;
-
                 default:
                     throw new IllegalStateException("ERROR: Current order must be between 1"
                     + "and 3 (inclusive) in UnitComparator->compare(), Sorter.java");
@@ -120,7 +127,6 @@ class UnitComparator implements Comparator<Unit>
             {
                 Date dateA = dateFormat.parse(a.getDateShipped());
                 Date dateB = dateFormat.parse(b.getDateShipped());
-
                 if (dateA.compareTo(dateB) > 0)
                 {
                     result = 1;
@@ -155,7 +161,6 @@ class UnitComparator implements Comparator<Unit>
                 result = -1;
             }
         }
-
         return result;
     }
 
@@ -175,7 +180,6 @@ class UnitComparator implements Comparator<Unit>
         {
             result = 0;
         }
-
         return result;
     }
 
@@ -187,7 +191,6 @@ class UnitComparator implements Comparator<Unit>
         {
             value += (int) str.charAt(count);
         }
-
         return value;
     }
 }
