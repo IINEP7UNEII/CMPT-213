@@ -45,7 +45,7 @@ public class UI
 
         while (input < minOption || input > maxOption)
         {
-            System.out.print(">Please select an option listed below<\n> ");
+            System.out.print(">Please select an option listed above<\n> ");
             input = Integer.parseInt(scan.nextLine());
         }
         return input;
@@ -163,7 +163,7 @@ public class UI
 
         if (data.size() == 0)
         {
-            System.out.println(">The list is empty, no Water Purification Units to dispaly!<\n");
+            System.out.println(">The list is empty, no Water Purification Units to display!<\n");
         }
         else
         {
