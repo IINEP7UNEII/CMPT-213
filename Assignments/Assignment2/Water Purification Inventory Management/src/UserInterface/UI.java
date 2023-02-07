@@ -104,7 +104,7 @@ public class UI
                 setOrder();
                 mainMenu();
                 break;
-            case 8:
+            case 8: // 8) Exit successfully
                 exit();
                 break;
         }
