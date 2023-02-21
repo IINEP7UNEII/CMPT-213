@@ -6,7 +6,7 @@ Class: Board
 	Collaborators:
 	- GameLogic: The GameLogic class will use the data stored in Board to determine the appropriate actions for the game to take.
 	- MazeGenerator: Passes the size of the Board to MazeGenerator to generate the approriate maze.
-	- GameDisplay: Passes the information from the Board to GameDisplay to output the game data.
+	- BoardDisplay: Passes the information from the Board to BoardDisplay to output the game data.
 
 Class: GameLogic
 	Responsibilities:
@@ -16,7 +16,7 @@ Class: GameLogic
 	- Allows the player to move the Mouse object on the Board and to determine the score/win/lose status.
 	Collaborators:
 	- Board: Takes information from the board and determinates the game logic.
-	- GameDisplay: Passes new information and values to GameDisplay to display said information.
+	- BoardDisplay: Passes new information and values to BoardDisplay to display said information.
 
 Class: MazeGenerator
 	Responsibilities:
