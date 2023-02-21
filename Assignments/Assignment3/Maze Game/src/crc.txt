@@ -1,0 +1,76 @@
+Class: Board
+	Responsibilities:
+	- Store the data for the board on which the game will be played
+	- Store the locations of all the objects on the board
+	- Set the dimensions of the game board
+	Collaborators:
+	- GameLogic: The GameLogic class will use the data stored in Board to determine the appropriate actions for the game to take.
+	- MazeGenerator: Passes the size of the Board to MazeGenerator to generate the approriate maze.
+	- GameDisplay: Passes the information from the Board to GameDisplay to output the game data.
+
+Class: GameLogic
+	Responsibilities:
+	- Uses the available information from the board to decide the logic of the game
+	- Generates the positions of the objects onto the board (uses old coordinates of a postion to find the new coordinates for the objects)
+	- Determines the procedings after taking in user input from the game display class
+	- Allows the player to move the Mouse object on the Board and to determine the score/win/lose status.
+	Collaborators:
+	- Board: Takes information from the board and determinates the game logic.
+	- GameDisplay: Passes new information and values to GameDisplay to display said information.
+
+Class: MazeGenerator
+	Responsibilities:
+	- Generates the maze for the board to display and for GameLogic to use in the detrmenation of object positions.
+	Collaborators:
+	- Board: Takes information from the board (specifically the dimensions) to generate an appropriate maze. The maze is then passed back to the Board to store the walls in the Board class.
+
+Class: BoardDisplay
+	Responsibilities:
+	- Draw the board.
+	- Draw all objects on the board.
+	- Handle the displaying and updateing of positions on the board.
+	Collaborators:
+	- Board: Take information from the Board to display the game data on the screen.
+
+Class: Menus
+	Responsibilities:
+	- Handle all UI aspects of the game (taking input and displaying the results) other than displaying the Board.
+	- Handle all menus and decisions from the user.
+	- Display start and end screens.
+	Collaborators:
+	- Board: Updates the board if the user inputs a new position for the mouse.
+	- MazeGenerator: Calls MazeGenerator when the game is started.
+	- BoardDisplay: Calls BoardDisplay when the game is started.
+	- GameLogic: Passes user input to GameLogic for it to determine the next menu or proceding for the game.
+
+Class: Wall
+	Responsibilities:
+	- Store the character representing the object.
+	- Have certain paramaters relating to the object.
+	Collaborators:
+	- Board: The Board class will use this object to place it on an appropriate coordinate on the grid.
+
+Class: Mouse
+	Responsibilities:
+	- Store the character representing the object.
+	- Have certain paramaters relating to the object.
+	- Allow the mouse to be moved (not have a final location on the grid).
+	Collaborators:
+	- Board: The Board class will use this object to place it on an appropriate coordinate on the grid.
+
+Class: Cat
+	Responsibilities:
+	- Store the character representing the object.
+	- Have certain paramaters relating to the object.
+	- Generate a new random adjacent position for the cat from the previous one. A complete random position will be generate if the cat did not have a previous position (it is new).
+	Collaborators:
+	- Board: The Board class will use this object to place it on an appropriate coordinate on the grid.
+
+Class: Cheese
+	Responsibilities:
+	- Store the character representing the object.
+	- Have certain paramaters relating to the object.
+	- Generate a new cheese on a random coordinate in the Board grid if the Mouse coordinate is equal to the Cheese coordinate.
+	Collaborators:
+	- Board: The Board class will use this object to place it on an appropriate coordinate on the grid.
+
