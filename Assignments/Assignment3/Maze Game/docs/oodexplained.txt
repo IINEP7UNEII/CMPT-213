@@ -1,0 +1,9 @@
+How will a maze be generated onto the board: 
+When the game is started by selected the appropriate decision in the start menu, the GameLogic class will initialize a new MazeGenerator which will use the current
+dimensions specified in the Board class to create an appropriate random set of walls on the board. Then these walls will be passed to the Board class which will insert these Wall objects
+onto the board by the specified coordinates from the MazeGenerator class.
+
+How will the game determine that the mouse has been "caught" by the cats:
+Each time the position of a piece is changed that information will be sent to the game logic class to determine if the mouse has collided with a cat or not. This will be determined by the
+comparing the coordinates of the mouse and appropriate cat object to see if they are the same or adjacent to each other; if this is true then the GameLogic class will terminate the game loop
+and call a method from the Menus class to display an end screen.
