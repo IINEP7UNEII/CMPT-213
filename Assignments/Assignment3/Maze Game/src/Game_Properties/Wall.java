@@ -1,6 +1,9 @@
 package Game_Properties;
 
-public class Wall 
+public class Wall extends BoardPeice
 {
-    
+    public Wall()
+    {
+        super('#');
+    }
 }
