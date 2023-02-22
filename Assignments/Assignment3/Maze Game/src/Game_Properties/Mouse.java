@@ -1,6 +1,6 @@
 package Game_Properties;
 
-public class Mouse extends BoardPeice
+public final class Mouse extends BoardPeice
 {
     public Mouse()
     {

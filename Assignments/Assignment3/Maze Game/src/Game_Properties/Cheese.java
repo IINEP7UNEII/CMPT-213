@@ -1,6 +1,6 @@
 package Game_Properties;
 
-public class Cheese extends BoardPeice
+public final class Cheese extends BoardPeice
 {
     public Cheese()
     {

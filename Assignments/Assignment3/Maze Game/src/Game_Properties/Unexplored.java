@@ -1,6 +1,6 @@
 package Game_Properties;
 
-public class Unexplored extends BoardPeice
+public final class Unexplored extends BoardPeice
 {
     private BoardPeice underlyingObject;
 

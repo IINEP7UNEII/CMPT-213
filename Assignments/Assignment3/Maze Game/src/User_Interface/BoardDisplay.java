@@ -5,7 +5,7 @@ import Game_Properties.*;
 public class BoardDisplay 
 {
     public BoardDisplay()
-    {}
+    { }
 
     public void displayBoard(Board board)
     {

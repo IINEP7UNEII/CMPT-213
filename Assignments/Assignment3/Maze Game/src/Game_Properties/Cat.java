@@ -1,6 +1,6 @@
 package Game_Properties;
 
-public class Cat extends BoardPeice
+public final class Cat extends BoardPeice
 {
     public Cat()
     {

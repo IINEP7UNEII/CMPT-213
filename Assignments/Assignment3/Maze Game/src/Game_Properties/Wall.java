@@ -1,6 +1,6 @@
 package Game_Properties;
 
-public class Wall extends BoardPeice
+public final class Wall extends BoardPeice
 {
     public Wall()
     {

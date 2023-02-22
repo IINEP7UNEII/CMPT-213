@@ -4,11 +4,10 @@ import Game_Properties.*;
 
 public class Main 
 {
-    public static void main(String[] args) throws Exception 
+    public static void main(String[] args)
     {
         Board board = new Board();
         BoardDisplay displayBoard = new BoardDisplay();
-        board.generateBasicBoard();
         displayBoard.displayBoard(board);
     }
 }

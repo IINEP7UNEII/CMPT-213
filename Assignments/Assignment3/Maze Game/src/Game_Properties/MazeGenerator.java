@@ -17,7 +17,7 @@ public class MazeGenerator
         rand = new Random();
     }
 
-    public void generateMaze() 
+    public BoardPeice[][] generateMaze() 
     {
         for (int ver = 0; ver < height; ++ver) 
         {
@@ -27,10 +27,11 @@ public class MazeGenerator
             }
         }
 
-        int startX = rand.nextInt(width - 2);
-        int startY = rand.nextInt(height - 2);
+        int startX = 1; // start at top left corner
+        int startY = 1;
         maze[startY][startX] = new Unexplored();
         carveMaze(startX, startY);
+        return maze;
     }
 
     private void carveMaze(int x, int y) 
@@ -52,6 +53,27 @@ public class MazeGenerator
                 carveMaze(nextX, nextY);
             }
         }
+        fixMaze();
+    }
+
+    private void fixMaze() 
+    {
+        for (int ver = 1; ver < height - 1; ++ver)
+        {
+            if (maze[ver + 1][width - 2].getICON() == '#' && maze[ver - 1][width - 2].getICON() == '#')
+            {
+                int toPlace = rand.nextInt(2);
+
+                if (toPlace == 1)
+                {
+                    maze[ver][width - 2] = new Unexplored();
+                }
+                else if (maze[ver][width - 3].getICON() == '#')
+                {
+                    maze[ver][width - 2] = new Wall();
+                }
+            }
+        }
     }
 
     private void chooseDirection(int[][] arr) 
@@ -63,25 +85,5 @@ public class MazeGenerator
             arr[count] = arr[dir];
             arr[dir] = temp;
         }
-    }
-
-    public void printMaze()
-    {
-        for (int ver = 1; ver < height - 1; ++ver) 
-        {
-            for (int hor = 1; hor < width - 1; ++hor) 
-            {
-                System.out.print(maze[ver][hor].getICON());
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-    public static void main(String[] args) 
-    {
-        MazeGenerator maze = new MazeGenerator(18, 13);
-        maze.generateMaze();
-        maze.printMaze();
     }
 }
