@@ -21,6 +21,7 @@ public class Board
         addMouse();
         addCats();
         generateCheese();
+        hideAll();
     }
 
     private void generateBasicBoard()
@@ -142,6 +143,22 @@ public class Board
         }
 
         board[randY][randX] = new Cheese();
+    }
+
+    private void hideAll()
+    {
+        for (int ver = 1; ver < VERTICAL_LENGTH - 1; ++ver)
+        {
+            for (int hor = 1; hor < HORIZONTAL_LENGTH - 1; ++hor)
+            {
+                board[ver][hor] = new Unexplored(board[ver][hor]);
+            }
+        }
+    }
+
+    public void revealAround(int x, int y)
+    {
+        
     }
 
     public int getHorizontalLength()

@@ -9,18 +9,18 @@ public final class Unexplored extends BoardPeice
         super('.');
     }
 
+    public Unexplored(BoardPeice underlyingObject)
+    {
+        super('.');
+    }
+
     public char getICON() 
     {
         return ICON;
     }
 
-    public Object getUnderlyingObject() 
+    public BoardPeice getUnderlyingObject() 
     {
         return underlyingObject;
-    }
-
-    public void setUnderlyingObject(BoardPeice object)
-    {
-        underlyingObject = object;
     }
 }
