@@ -12,13 +12,8 @@ public class Board
         VERTICAL_LENGTH = 15;
         board = new BoardPeice[VERTICAL_LENGTH][HORIZONTAL_LENGTH];
 
-        for (int ver = 0; ver < VERTICAL_LENGTH; ++ver)
-        {
-            for (int hor = 0; hor < HORIZONTAL_LENGTH; ++hor)
-            {
-                board[ver][hor] = new BoardPeice('0');
-            }
-        }
+        generateBasicBoard();
+        //combineBoardAndMaze();
     }
 
     public void generateBasicBoard()
@@ -37,6 +32,11 @@ public class Board
                 }
             }
         }
+    }
+
+    private void combineBoardAndMaze(BoardPeice[][] maze)
+    {
+        
     }
 
     public int getHorizontalLength()

@@ -1,90 +1,87 @@
 package Game_Properties;
 
-import java.util.Stack;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class MazeGenerator 
 {
+    private BoardPeice[][] maze;
     private int width;
     private int height;
-    private char[][] maze;
+    private Random rand;
 
-    public MazeGenerator(int width, int height) 
+    public MazeGenerator(final int width, final int height) 
     {
         this.width = width;
         this.height = height;
-        maze = new char[height][width];
+        maze = new BoardPeice[height][width];
+        rand = new Random();
     }
 
-    public void generateMaze() {
-        // Fill maze with walls
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                maze[i][j] = '#';
-            }
-        }
-    
-        // Generate maze paths using depth-first search
-        Stack<int[]> stack = new Stack<>();
-        int[] start = {1, 1};
-        stack.push(start);
-        while (!stack.isEmpty()) {
-            int[] current = stack.pop();
-            int x = current[0];
-            int y = current[1];
-            maze[y][x] = ' ';
-    
-            // Check adjacent cells
-            List<int[]> neighbors = new ArrayList<>();
-            if (x > 2 && maze[y][x-2] == '#') {
-                neighbors.add(new int[]{x-2, y});
-            }
-            if (y > 2 && maze[y-2][x] == '#') {
-                neighbors.add(new int[]{x, y-2});
-            }
-            if (x < width-2 && maze[y][x+2] == '#') {
-                neighbors.add(new int[]{x+2, y});
-            }
-            if (y < height-3 && maze[y+2][x] == '#') {
-                neighbors.add(new int[]{x, y+2});
-            }
-    
-            // Choose a random neighbor and connect the cells
-            if (!neighbors.isEmpty()) {
-                int[] neighbor = neighbors.get(new Random().nextInt(neighbors.size()));
-                int nx = neighbor[0];
-                int ny = neighbor[1];
-                maze[(y + ny) / 2][(x + nx) / 2] = ' ';
-    
-                // If the neighbor is in the right-most column, add a wall to the right
-                if (nx == width - 2) {
-                    maze[ny][(nx+1)] = '#';
-                }
-    
-                stack.push(current);
-                stack.push(neighbor);
-            }
-        }
-    }
-
-    public void printMaze() 
+    public void generateMaze() 
     {
-        for (int i = 0; i < height; i++) 
+        for (int ver = 0; ver < height; ++ver) 
         {
-            for (int j = 0; j < width; j++) 
+            for (int hor = 0; hor < width; ++hor) 
             {
-                System.out.print(maze[i][j]);
+                maze[ver][hor] = new Wall();
+            }
+        }
+
+        int startX = rand.nextInt(width - 2);
+        int startY = rand.nextInt(height - 2);
+        maze[startY][startX] = new Unexplored();
+        carveMaze(startX, startY);
+    }
+
+    private void carveMaze(int x, int y) 
+    {
+        int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+        chooseDirection(directions);
+
+        for (int[] dir : directions) 
+        {
+            int dirX = dir[0];
+            int dirY = dir[1];
+            int nextX = x + dirX * 2;
+            int nextY = y + dirY * 2;
+
+            if ((nextX >= 0 && nextX < width - 1) && (nextY >= 0 && nextY < height - 1) && maze[nextY][nextX].getICON() == '#') 
+            {
+                maze[y + dirY][x + dirX] = new Unexplored();
+                maze[nextY][nextX] = new Unexplored();
+                carveMaze(nextX, nextY);
+            }
+        }
+    }
+
+    private void chooseDirection(int[][] arr) 
+    {
+        for (int count = arr.length - 1; count > 0; --count) 
+        {
+            int dir = rand.nextInt(count + 1);
+            int[] temp = arr[count];
+            arr[count] = arr[dir];
+            arr[dir] = temp;
+        }
+    }
+
+    public void printMaze()
+    {
+        for (int ver = 1; ver < height - 1; ++ver) 
+        {
+            for (int hor = 1; hor < width - 1; ++hor) 
+            {
+                System.out.print(maze[ver][hor].getICON());
             }
             System.out.println();
         }
+        System.out.println();
     }
 
     public static void main(String[] args) 
     {
-        MazeGenerator mazeGenerator = new MazeGenerator(18, 13);
-        mazeGenerator.generateMaze();
-        mazeGenerator.printMaze();
+        MazeGenerator maze = new MazeGenerator(18, 13);
+        maze.generateMaze();
+        maze.printMaze();
     }
 }
