@@ -2,7 +2,7 @@ package Game_Properties;
 
 import java.util.Random;
 
-public class MazeGenerator 
+public final class MazeGenerator 
 {
     private BoardPeice[][] maze;
     private int width;
@@ -23,13 +23,15 @@ public class MazeGenerator
         {
             for (int hor = 0; hor < width; ++hor) 
             {
-                maze[ver][hor] = new Wall();
+                maze[ver][hor] = new BoardPeice('0');
+                maze[ver][hor] = maze[ver][hor].new Wall();
             }
         }
 
         int startX = 1; // start at top left corner
         int startY = 1;
-        maze[startY][startX] = new Unexplored();
+        maze[startY][startX] = maze[startY][startX].new Unexplored();
+        maze[startY][startX].setUnderlyingObject(maze[startY][startX].new Empty());
         carveMaze(startX, startY);
         return maze;
     }
@@ -46,11 +48,14 @@ public class MazeGenerator
             int nextX = x + dirX * 2;
             int nextY = y + dirY * 2;
 
-            if ((nextX >= 0 && nextX < width - 1) && (nextY >= 0 && nextY < height - 1) && maze[nextY][nextX].getICON() == '#') 
+            if ((nextX >= 0 && nextX < width - 1) && (nextY >= 0 && nextY < height - 1) && maze[nextY][nextX].getClass() == BoardPeice.Wall.class) 
             {
-                maze[y + dirY][x + dirX] = new Unexplored();
-                maze[nextY][nextX] = new Unexplored();
+                maze[y + dirY][x + dirX] = maze[y + dirY][x + dirX].new Unexplored();
+                maze[y + dirY][x + dirX].setUnderlyingObject(maze[y + dirY][x + dirX].new Empty());
+                maze[nextY][nextX] = maze[nextY][nextX].new Unexplored();
+                maze[nextY][nextX].setUnderlyingObject(maze[nextY][nextX].new Empty());
                 carveMaze(nextX, nextY);
+                //find problem in here which causes the underlying objects to display '.'
             }
         }
         fixMaze();
@@ -60,17 +65,18 @@ public class MazeGenerator
     {
         for (int ver = 1; ver < height - 1; ++ver)
         {
-            if (maze[ver + 1][width - 2].getICON() == '#' && maze[ver - 1][width - 2].getICON() == '#')
+            if (maze[ver + 1][width - 2].getClass() == BoardPeice.Wall.class && maze[ver - 1][width - 2].getClass() == BoardPeice.Wall.class)
             {
                 int toPlace = rand.nextInt(2);
 
                 if (toPlace == 1)
                 {
-                    maze[ver][width - 2] = new Unexplored();
+                    maze[ver][width - 2] = maze[ver][width - 2].new Unexplored();
+                    maze[ver][width - 2].setUnderlyingObject(maze[ver][width - 2].new Empty());
                 }
-                else if (maze[ver][width - 3].getICON() == '#')
+                else if (maze[ver][width - 3].getClass() == BoardPeice.Wall.class)
                 {
-                    maze[ver][width - 2] = new Wall();
+                    maze[ver][width - 2].setUnderlyingObject(maze[ver][width - 2].new Wall());
                 }
             }
         }

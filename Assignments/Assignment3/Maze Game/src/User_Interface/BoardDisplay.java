@@ -2,7 +2,7 @@ package User_Interface;
 
 import Game_Properties.*;
 
-public class BoardDisplay 
+public final class BoardDisplay 
 {
     public BoardDisplay()
     { }
