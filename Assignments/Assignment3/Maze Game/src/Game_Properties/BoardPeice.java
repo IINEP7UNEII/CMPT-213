@@ -2,17 +2,23 @@ package Game_Properties;
 
 public class BoardPeice 
 {
+    private BoardPeice underlyingObject;
     protected char ICON;
     private int coordX;
     private int coordY;
-    private BoardPeice underlyingObject;
+
+    public BoardPeice()
+    {
+        ICON = '0';
+        coordX = 0;
+        coordY = 0;
+    }
 
     public BoardPeice(char ICON)
     {
         this.ICON = ICON;
         coordX = 0;
         coordY = 0;
-        underlyingObject = null;
     }
 
     public BoardPeice(char ICON, int x, int y)
@@ -20,7 +26,6 @@ public class BoardPeice
         this.ICON = ICON;
         coordX = x;
         coordY = y;
-        underlyingObject = null;
     }
 
     public char getICON() 

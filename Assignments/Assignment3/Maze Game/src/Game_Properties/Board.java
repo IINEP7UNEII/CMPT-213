@@ -23,6 +23,7 @@ public final class Board
         addCats();
         generateCheese();
         revealAroundMouse(); //temp, later put in game loop
+        //revealAll();
     }
 
     private void generateBasicBoard()
@@ -31,9 +32,9 @@ public final class Board
         {
             for (int hor = 0; hor < HORIZONTAL_LENGTH; ++hor)
             {
-                board[ver][hor] = new BoardPeice('0');
+                board[ver][hor] = new BoardPeice();
                 board[ver][hor] = board[ver][hor].new Unexplored();
-                board[ver][hor].setUnderlyingObject(board[ver][hor].new Empty());
+
                 if (hor == 0 || hor == HORIZONTAL_LENGTH - 1 || ver == 0 || ver == VERTICAL_LENGTH - 1)
                 {
                     board[ver][hor] = board[ver][hor].new Wall();
@@ -55,7 +56,6 @@ public final class Board
             for (int hor = 0; hor < HORIZONTAL_LENGTH; ++hor)
             {
                 board[ver][hor].setUnderlyingObject(maze[mazeVer][mazeHor]);
-                //board[ver][hor] = maze[mazeVer][mazeHor];
                 ++mazeHor;
             }
             mazeHor = 0;
@@ -182,8 +182,18 @@ public final class Board
     {
         if (board[ver][hor].getClass() == BoardPeice.Unexplored.class)
         {
-            BoardPeice.Unexplored temp = (BoardPeice.Unexplored) board[ver][hor];
-            board[ver][hor] = temp.getUnderlyingObject();
+            board[ver][hor] = board[ver][hor].getUnderlyingObject();
+        }
+    }
+
+    public void revealAll()
+    {
+        for (int ver = 0; ver < VERTICAL_LENGTH - 1; ++ver)
+        {
+            for (int hor = 0; hor < HORIZONTAL_LENGTH; ++hor)
+            {
+                reveal(ver, hor);
+            }
         }
     }
 
@@ -204,12 +214,12 @@ public final class Board
 
     public int getMouseCoordinateX()
     {
-        return VERTICAL_LENGTH;
+        return mouse.getCoordX();
     }
 
     public int getMouseCoordinateY()
     {
-        return VERTICAL_LENGTH;
+        return mouse.getCoordY();
     }
 
     public void setMouseCoordinateX(int x)

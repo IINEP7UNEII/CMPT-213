@@ -30,8 +30,8 @@ public final class MazeGenerator
 
         int startX = 1; // start at top left corner
         int startY = 1;
-        maze[startY][startX] = maze[startY][startX].new Unexplored();
-        maze[startY][startX].setUnderlyingObject(maze[startY][startX].new Empty());
+
+        maze[startY][startX] = maze[startY][startX].new Empty();
         carveMaze(startX, startY);
         return maze;
     }
@@ -50,12 +50,9 @@ public final class MazeGenerator
 
             if ((nextX >= 0 && nextX < width - 1) && (nextY >= 0 && nextY < height - 1) && maze[nextY][nextX].getClass() == BoardPeice.Wall.class) 
             {
-                maze[y + dirY][x + dirX] = maze[y + dirY][x + dirX].new Unexplored();
-                maze[y + dirY][x + dirX].setUnderlyingObject(maze[y + dirY][x + dirX].new Empty());
-                maze[nextY][nextX] = maze[nextY][nextX].new Unexplored();
-                maze[nextY][nextX].setUnderlyingObject(maze[nextY][nextX].new Empty());
+                maze[y + dirY][x + dirX] = maze[y + dirY][x + dirX].new Empty();
+                maze[nextY][nextX] = maze[nextY][nextX].new Empty();
                 carveMaze(nextX, nextY);
-                //find problem in here which causes the underlying objects to display '.'
             }
         }
         fixMaze();
@@ -71,12 +68,11 @@ public final class MazeGenerator
 
                 if (toPlace == 1)
                 {
-                    maze[ver][width - 2] = maze[ver][width - 2].new Unexplored();
-                    maze[ver][width - 2].setUnderlyingObject(maze[ver][width - 2].new Empty());
+                    maze[ver][width - 2] = maze[ver][width - 2].new Empty();
                 }
                 else if (maze[ver][width - 3].getClass() == BoardPeice.Wall.class)
                 {
-                    maze[ver][width - 2].setUnderlyingObject(maze[ver][width - 2].new Wall());
+                    maze[ver][width - 2] = maze[ver][width - 2].new Wall();
                 }
             }
         }

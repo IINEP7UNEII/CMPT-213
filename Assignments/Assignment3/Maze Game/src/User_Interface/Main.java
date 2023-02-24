@@ -6,8 +6,7 @@ public final class Main
 {
     public static void main(String[] args)
     {
-        Board board = new Board();
-        BoardDisplay displayBoard = new BoardDisplay();
-        displayBoard.displayBoard(board);
+        MazeGame game = new MazeGame();
+        game.startMazeGame(game);
     }
 }

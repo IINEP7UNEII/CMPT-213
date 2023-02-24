@@ -7,7 +7,7 @@ public final class BoardDisplay
     public BoardDisplay()
     { }
 
-    public void displayBoard(Board board)
+    public void display(Board board)
     {
         for (int ver = 0; ver < board.getVerticalLength(); ++ver)
         {
