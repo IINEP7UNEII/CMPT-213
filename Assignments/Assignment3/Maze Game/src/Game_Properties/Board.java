@@ -9,6 +9,7 @@ public final class Board
     private BoardPeice board[][];
     private Random rand;
     private BoardPeice.Mouse mouse;
+    BoardPeice cheese;
 
     public Board()
     {
@@ -22,8 +23,6 @@ public final class Board
         addMouse();
         addCats();
         generateCheese();
-        revealAroundMouse(); //temp, later put in game loop
-        //revealAll();
     }
 
     private void generateBasicBoard()
@@ -55,6 +54,7 @@ public final class Board
         {
             for (int hor = 0; hor < HORIZONTAL_LENGTH; ++hor)
             {
+                maze[mazeVer][mazeHor].setUnderlyingObject(maze[mazeVer][mazeHor].new Empty());
                 board[ver][hor].setUnderlyingObject(maze[mazeVer][mazeHor]);
                 ++mazeHor;
             }
@@ -69,6 +69,7 @@ public final class Board
         mouse.setCoordX(1);
         mouse.setCoordY(1);
         board[1][1] = mouse;
+        board[1][1].setUnderlyingObject(board[1][1].new Empty());
     }
 
     private void addCats()
@@ -141,24 +142,38 @@ public final class Board
         }
     }
 
-    private void generateCheese()
+    private void reveal(int ver, int hor)
     {
-        int randX = rand.nextInt(HORIZONTAL_LENGTH);
-        int randY =  rand.nextInt(VERTICAL_LENGTH);
+        if (board[ver][hor].getClass() == BoardPeice.Unexplored.class)
+        {
+            board[ver][hor] = board[ver][hor].getUnderlyingObject();
+            board[ver][hor].setUnderlyingObject(board[ver][hor].new Empty());
+        }
+    }
 
-        while (board[randY][randX].getClass() != BoardPeice.Unexplored.class)
+    public void generateCheese()
+    {
+        int randX = rand.nextInt(HORIZONTAL_LENGTH - 10); //temp
+        int randY = rand.nextInt(VERTICAL_LENGTH - 10);
+
+        while (!(board[randY][randX].getClass() == BoardPeice.Unexplored.class 
+        || board[randY][randX].getClass() == BoardPeice.Empty.class) 
+        || board[randY][randX].getUnderlyingObject().getClass() != BoardPeice.Empty.class)
         {
             randX = rand.nextInt(HORIZONTAL_LENGTH);
             randY =  rand.nextInt(VERTICAL_LENGTH);
         }
 
-        BoardPeice cheese = new BoardPeice('!', randX, randY);
+        cheese = new BoardPeice();
         board[randY][randX] = cheese.new Cheese();
+        cheese.setCoordY(randY);
+        cheese.setCoordX(randX);
     }
 
-    private void revealAroundMouse()
+    public void revealAroundMouse()
     {
         for (int dirX = -1; dirX < 2; ++dirX)
+
         {
             for (int dirY = -1; dirY < 2; ++dirY) 
             {
@@ -170,19 +185,11 @@ public final class Board
                 int newX = mouse.getCoordX() + dirX;
                 int newY = mouse.getCoordY() + dirY;
 
-                if (newX >= 0 && newY >= 0 && newX < VERTICAL_LENGTH && newY < HORIZONTAL_LENGTH)
+                if (newX >= 0 && newY >= 0 && newX < HORIZONTAL_LENGTH && newY < VERTICAL_LENGTH)
                 {
                     reveal(newY, newX);
                 }
             }
-        }
-    }
-
-    private void reveal(int ver, int hor)
-    {
-        if (board[ver][hor].getClass() == BoardPeice.Unexplored.class)
-        {
-            board[ver][hor] = board[ver][hor].getUnderlyingObject();
         }
     }
 
@@ -195,6 +202,11 @@ public final class Board
                 reveal(ver, hor);
             }
         }
+    }
+
+    public void removeCheese()
+    {
+        board[cheese.getCoordY()][cheese.getCoordX()].setUnderlyingObject(board[cheese.getCoordY()][cheese.getCoordX()].new Empty());
     }
 
     public int getHorizontalLength()
@@ -222,13 +234,58 @@ public final class Board
         return mouse.getCoordY();
     }
 
-    public void setMouseCoordinateX(int x)
+    public int getCheeseCoordinateX()
     {
-        mouse.setCoordX(x);
+        return cheese.getCoordX();
     }
 
-    public void setMouseCoordinateY(int y)
+    public int getCheeseCoordinateY()
     {
-        mouse.setCoordX(y);
+        return cheese.getCoordY();
+    }
+
+    public void setDeadObject(int ver, int hor)
+    {
+        board[ver][hor] = board[ver][hor].new Dead();
+    }
+
+    public void mouseMoveUp()
+    {
+        int oldX = mouse.getCoordX();
+        int oldY = mouse.getCoordY();
+        board[oldY][oldX] = mouse.getUnderlyingObject();
+        mouse.setUnderlyingObject(board[mouse.getCoordY() - 1][mouse.getCoordX()]);
+        board[mouse.getCoordY() - 1][mouse.getCoordX()] = mouse;
+        mouse.setCoordY(mouse.getCoordY() - 1);
+    }
+
+    public void mouseMoveDown()
+    {
+        int oldX = mouse.getCoordX();
+        int oldY = mouse.getCoordY();
+        board[oldY][oldX] = mouse.getUnderlyingObject();
+        mouse.setUnderlyingObject(board[mouse.getCoordY() + 1][mouse.getCoordX()]);
+        board[mouse.getCoordY() + 1][mouse.getCoordX()] = mouse;
+        mouse.setCoordY(mouse.getCoordY() + 1);
+    }
+
+    public void mouseMoveRight()
+    {
+        int oldX = mouse.getCoordX();
+        int oldY = mouse.getCoordY();
+        board[oldY][oldX] = mouse.getUnderlyingObject();
+        mouse.setUnderlyingObject(board[mouse.getCoordY()][mouse.getCoordX() + 1]);
+        board[mouse.getCoordY()][mouse.getCoordX() + 1] = mouse;
+        mouse.setCoordX(mouse.getCoordX() + 1);
+    }
+
+    public void mouseMoveLeft()
+    {
+        int oldX = mouse.getCoordX();
+        int oldY = mouse.getCoordY();
+        board[oldY][oldX] = mouse.getUnderlyingObject();
+        mouse.setUnderlyingObject(board[mouse.getCoordY()][mouse.getCoordX() - 1]);
+        board[mouse.getCoordY()][mouse.getCoordX() - 1] = mouse;
+        mouse.setCoordX(mouse.getCoordX() - 1);
     }
 }

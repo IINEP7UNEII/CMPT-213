@@ -39,11 +39,78 @@ public final class MazeGame
         board.revealAll();
     }
 
+    public Boolean gameWin()
+    {
+        if (cheeseToWin <= cheeseCollected)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean gameLose()
+    {
+        if (eatenByCatCheck())
+        {
+            board.setDeadObject(board.getMouseCoordinateY(), board.getMouseCoordinateX());
+            return true;
+        }
+        return false;
+    }
+
     private void gameLoop(MazeGame game)
     {
-        while (true) //change loop argument later
+        String move;
+        
+        while (!gameWin())
         {
-            menu.updateFrame(game, cheeseCollected, cheeseToWin);
+            move = menu.updateFrame(game, cheeseCollected, cheeseToWin);
+            moveMouse(move);
+            cheeseCollectedCheck();
         }
+
+        menu.gameWinMenu(board, cheeseCollected, cheeseToWin);
+        System.exit(0);
+    }
+
+    private void moveMouse(String move)
+    {
+        switch (move.toLowerCase())
+        {
+            case "w":
+                board.mouseMoveUp();
+                break;
+
+            case "a":
+                board.mouseMoveLeft();
+                break;
+
+            case "s":
+                board.mouseMoveDown();
+                break;
+
+            case "d":
+                board.mouseMoveRight();
+                break;
+        }
+    }
+
+    private void cheeseCollectedCheck()
+    {
+        if (board.getMouseCoordinateX() == board.getCheeseCoordinateX() && board.getMouseCoordinateY() == board.getCheeseCoordinateY())
+        {
+            ++cheeseCollected;
+            board.removeCheese();
+            board.generateCheese();
+        }
+    }
+
+    private Boolean eatenByCatCheck()
+    {
+        if (board.getObject(board.getMouseCoordinateY(), board.getMouseCoordinateX()).getUnderlyingObject().getClass().equals(BoardPeice.Cat.class))
+        {
+            return true;
+        }
+        return false;
     }
 }

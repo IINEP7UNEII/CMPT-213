@@ -37,16 +37,38 @@ public final class Menus
         System.out.println("\t(You must press enter after each move).");
     }
 
-    public void updateFrame(MazeGame game, int collected, int toWin)
+    public String updateFrame(MazeGame game, int collected, int toWin)
     {
         System.out.println("\nMaze:");
+        game.getBoard().revealAroundMouse();
         displayBoard.display(game.getBoard());
         cheeseCollectedMenu(collected, toWin);
 
-        String choice = moveSelectorMenu(game.getBoard());
-        cheats(game, choice);
-        help(choice);
-        //add mouse move functionality
+        if (game.gameLose())
+        {
+            gameLoseMenu(game.getBoard(), collected, toWin);
+            System.exit(0);
+        }
+
+        String move = moveSelectorMenu(game.getBoard());
+        // if (game.gameWin())
+        // {
+        //     gameWinMenu(game.getBoard(), collected, toWin);
+        //     System.exit(0);
+        // }
+
+        cheats(game, move);
+        help(move);
+        return move;
+    }
+
+    public void gameWinMenu(Board board, int collected, int toWin)
+    {
+        System.out.println("Congratulations! You won!");
+        board.revealAll();
+        System.out.println("\nMaze:");
+        displayBoard.display(board);
+        cheeseCollectedMenu(collected, toWin);
     }
 
     private void cheeseCollectedMenu(int collected, int toWin)
@@ -135,5 +157,15 @@ public final class Menus
         {
             tutorialMenu();
         }
+    }
+
+    private void gameLoseMenu(Board board, int collected, int toWin)
+    {
+        System.out.println("I'm sorry, you have been eaten!");
+        board.revealAll();
+        System.out.println("\nMaze:");
+        displayBoard.display(board);
+        cheeseCollectedMenu(collected, toWin);
+        System.out.println("GAME OVER; please try again.");
     }
 }

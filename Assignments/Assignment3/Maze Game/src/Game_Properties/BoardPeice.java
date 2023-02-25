@@ -92,6 +92,7 @@ public class BoardPeice
         public Mouse()
         {
             super('@');
+            underlyingObject = new Empty();
         }
     }
 
@@ -108,6 +109,14 @@ public class BoardPeice
         public Empty()
         {
             super(' ');
+        }
+    }
+
+    public final class Dead extends BoardPeice
+    {
+        public Dead()
+        {
+            super('X');
         }
     }
 }
