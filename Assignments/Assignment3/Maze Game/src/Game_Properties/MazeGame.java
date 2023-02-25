@@ -113,4 +113,6 @@ public final class MazeGame
         }
         return false;
     }
+
+    // make cats move
 }

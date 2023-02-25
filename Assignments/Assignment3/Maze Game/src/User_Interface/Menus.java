@@ -51,11 +51,6 @@ public final class Menus
         }
 
         String move = moveSelectorMenu(game.getBoard());
-        // if (game.gameWin())
-        // {
-        //     gameWinMenu(game.getBoard(), collected, toWin);
-        //     System.exit(0);
-        // }
 
         cheats(game, move);
         help(move);
