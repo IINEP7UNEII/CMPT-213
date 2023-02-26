@@ -9,7 +9,10 @@ public final class Board
     private BoardPeice board[][];
     private Random rand;
     private BoardPeice.Mouse mouse;
-    BoardPeice cheese;
+    BoardPeice.Cheese cheese;
+    BoardPeice.Cat cat1;
+    BoardPeice.Cat cat2;
+    BoardPeice.Cat cat3;
 
     public Board()
     {
@@ -37,6 +40,7 @@ public final class Board
                 if (hor == 0 || hor == HORIZONTAL_LENGTH - 1 || ver == 0 || ver == VERTICAL_LENGTH - 1)
                 {
                     board[ver][hor] = board[ver][hor].new Wall();
+                    board[ver][hor].setUnderlyingObject(board[ver][hor].new Empty());
                 }
             }
         }
@@ -74,72 +78,56 @@ public final class Board
 
     private void addCats()
     {
-        addBottomLeftCat();
-        addBottomRightCat();
-        addTopRightCat();
+        addBottomLeftCat(cat1);
+        addBottomRightCat(cat2);
+        addTopRightCat(cat3);
     }
 
-    private void addBottomLeftCat()
+    private void addBottomLeftCat(BoardPeice.Cat cat)
     {
         int x = 1;
         int y = VERTICAL_LENGTH - 2;
-        if (board[y][x].getUnderlyingObject().getClass() != BoardPeice.Wall.class)
+
+        while (board[y][x].getUnderlyingObject().getClass() == BoardPeice.Wall.class)
         {
-            BoardPeice cat = new BoardPeice('!', x, y);
-            board[y][x] = cat.new Cat();
+            x += rand.nextInt(2);
+            y -= rand.nextInt(2);
         }
-        else
-        {
-            while (board[y][x].getUnderlyingObject().getClass() == BoardPeice.Wall.class) // bottom right cat
-            {
-                x += rand.nextInt(2);
-                y -= rand.nextInt(2);
-            }
-            BoardPeice cat = new BoardPeice('!', x, y);
-            board[y][x] = cat.new Cat();
-        }
+        cat = board[y][x].new Cat();
+        board[y][x] = cat;
+        cat.setCoordY(y);
+        cat.setCoordX(x);
     }
 
-    private void addBottomRightCat()
+    private void addBottomRightCat(BoardPeice.Cat cat)
     {
         int x = HORIZONTAL_LENGTH - 2;
         int y = VERTICAL_LENGTH - 2;
-        if (board[y][x].getUnderlyingObject().getClass() != BoardPeice.Wall.class)
+
+        while (board[y][x].getUnderlyingObject().getClass() == BoardPeice.Wall.class)
         {
-            BoardPeice cat = new BoardPeice('!', x, y);
-            board[y][x] = cat.new Cat();
+            x -= rand.nextInt(2);
+            y -= rand.nextInt(2);
         }
-        else
-        {
-            while (board[y][x].getUnderlyingObject().getClass() == BoardPeice.Wall.class) // bottom left cat
-            {
-                x -= rand.nextInt(2);
-                y -= rand.nextInt(2);
-            }
-            BoardPeice cat = new BoardPeice('!', x, y);
-            board[y][x] = cat.new Cat();
-        }
+        cat = board[y][x].new Cat();
+        board[y][x] = cat;
+        cat.setCoordY(y);
+        cat.setCoordX(x);
     }
 
-    private void addTopRightCat()
+    private void addTopRightCat(BoardPeice.Cat cat)
     {
         int x = HORIZONTAL_LENGTH - 2;
         int y = 1;
-        if (board[y][x].getUnderlyingObject().getClass() != BoardPeice.Wall.class)
+        while (board[y][x].getUnderlyingObject().getClass() == BoardPeice.Wall.class)
         {
-            BoardPeice cat = new BoardPeice('!', x, y);
-            board[y][x] = cat.new Cat();
+            x -= rand.nextInt(2);
+            y += rand.nextInt(2);
         }
-        else
-        {
-            while (board[y][x].getUnderlyingObject().getClass() == BoardPeice.Wall.class) // top right cat
-            {
-                x -= rand.nextInt(2);
-                y += rand.nextInt(2);
-            }
-            BoardPeice cat = new BoardPeice('!', x, y);
-            board[y][x] = cat.new Cat();
-        }
+        cat = board[y][x].new Cat();
+        board[y][x] = cat;
+        cat.setCoordY(y);
+        cat.setCoordX(x);
     }
 
     private void reveal(int ver, int hor)
@@ -153,18 +141,21 @@ public final class Board
 
     public void generateCheese()
     {
-        int randX = rand.nextInt(HORIZONTAL_LENGTH - 10); //temp
-        int randY = rand.nextInt(VERTICAL_LENGTH - 10);
+        int randX = rand.nextInt(HORIZONTAL_LENGTH - 16); //temp
+        int randY = rand.nextInt(VERTICAL_LENGTH - 11);
+        board[randY][randX].setUnderlyingObject(board[randY][randX].new Empty());
 
         while (!(board[randY][randX].getClass() == BoardPeice.Unexplored.class 
         || board[randY][randX].getClass() == BoardPeice.Empty.class) 
         || board[randY][randX].getUnderlyingObject().getClass() != BoardPeice.Empty.class)
         {
-            randX = rand.nextInt(HORIZONTAL_LENGTH);
-            randY =  rand.nextInt(VERTICAL_LENGTH);
+            randX = rand.nextInt(HORIZONTAL_LENGTH - 16);
+            randY =  rand.nextInt(VERTICAL_LENGTH - 11);
+            board[randY][randX].setUnderlyingObject(board[randY][randX].new Empty());
         }
 
-        cheese = new BoardPeice();
+        cheese = board[randY][randX].new Cheese();
+        cheese.setUnderlyingObject(board[randY][randX].new Empty());
         board[randY][randX] = cheese.new Cheese();
         cheese.setCoordY(randY);
         cheese.setCoordX(randX);
@@ -247,6 +238,16 @@ public final class Board
     public void setDeadObject(int ver, int hor)
     {
         board[ver][hor] = board[ver][hor].new Dead();
+    }
+
+    public void catMoveUp(BoardPeice.Cat cat)
+    {
+        int oldX = mouse.getCoordX();
+        int oldY = mouse.getCoordY();
+        board[oldY][oldX] = mouse.getUnderlyingObject();
+        mouse.setUnderlyingObject(board[mouse.getCoordY() - 1][mouse.getCoordX()]);
+        board[mouse.getCoordY() - 1][mouse.getCoordX()] = mouse;
+        mouse.setCoordY(mouse.getCoordY() - 1);
     }
 
     public void mouseMoveUp()

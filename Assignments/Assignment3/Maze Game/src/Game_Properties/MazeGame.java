@@ -115,5 +115,6 @@ public final class MazeGame
     }
 
     // make cats move
-    // test by taking multiple cheese
+    // fix maze to have loops
+    // add docs
 }
