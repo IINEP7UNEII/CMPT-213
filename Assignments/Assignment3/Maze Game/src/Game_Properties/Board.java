@@ -240,7 +240,7 @@ public final class Board
         board[ver][hor] = board[ver][hor].new Dead();
     }
 
-    public void catMoveUp(BoardPeice.Cat cat)
+    public void catMoveUp(BoardPeice.Cat cat) //////////////////////////////////////
     {
         int oldX = mouse.getCoordX();
         int oldY = mouse.getCoordY();
