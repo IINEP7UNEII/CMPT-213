@@ -3,6 +3,15 @@ package User_Interface;
 import Game_Properties.*;
 import java.util.Scanner;
 
+/**
+* Description: The Menus class contains all of the User Interface relating to the Maze game as well as all of the relevant
+* menus which make up the visible part of the interface. This class also checks the user input if it is correct and if it could
+* be used to move peices (mostly the mouse) on the board.
+*
+* @author Daniel Tolsky
+* @version 1.0
+*/
+
 public final class Menus 
 {
     private BoardDisplay displayBoard;
@@ -64,6 +73,16 @@ public final class Menus
         System.out.println("\nMaze:");
         displayBoard.display(board);
         cheeseCollectedMenu(collected, toWin);
+    }
+
+    public void gameLoseMenu(Board board, int collected, int toWin)
+    {
+        System.out.println("I'm sorry, you have been eaten!");
+        board.revealAll();
+        System.out.println("\nMaze:");
+        displayBoard.display(board);
+        cheeseCollectedMenu(collected, toWin);
+        System.out.println("GAME OVER; please try again.");
     }
 
     private void cheeseCollectedMenu(int collected, int toWin)
@@ -152,15 +171,5 @@ public final class Menus
         {
             tutorialMenu();
         }
-    }
-
-    private void gameLoseMenu(Board board, int collected, int toWin)
-    {
-        System.out.println("I'm sorry, you have been eaten!");
-        board.revealAll();
-        System.out.println("\nMaze:");
-        displayBoard.display(board);
-        cheeseCollectedMenu(collected, toWin);
-        System.out.println("GAME OVER; please try again.");
     }
 }

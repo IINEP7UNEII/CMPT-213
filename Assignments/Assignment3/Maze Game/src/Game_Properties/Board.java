@@ -2,6 +2,15 @@ package Game_Properties;
 
 import java.util.Random;
 
+/**
+* Description: This Board class contains all of the properties of the game board including the peices which are relevant
+* to the gameplay of the maze game. It handles the raw movement and generation of the board peices and their positions.
+* The board class hands off a usable board for the MazeGame class to use to create the game environment.
+*
+* @author Daniel Tolsky
+* @version 1.0
+*/
+
 public final class Board 
 {
     private final int HORIZONTAL_LENGTH;
@@ -78,12 +87,12 @@ public final class Board
 
     private void addCats()
     {
-        addBottomLeftCat(cat1);
-        addBottomRightCat(cat2);
-        addTopRightCat(cat3);
+        addBottomLeftCat();
+        addBottomRightCat();
+        addTopRightCat();
     }
 
-    private void addBottomLeftCat(BoardPeice.Cat cat)
+    private void addBottomLeftCat()
     {
         int x = 1;
         int y = VERTICAL_LENGTH - 2;
@@ -93,13 +102,13 @@ public final class Board
             x += rand.nextInt(2);
             y -= rand.nextInt(2);
         }
-        cat = board[y][x].new Cat();
-        board[y][x] = cat;
-        cat.setCoordY(y);
-        cat.setCoordX(x);
+        cat1 = board[y][x].new Cat();
+        board[y][x] = cat1;
+        cat1.setCoordY(y);
+        cat1.setCoordX(x);
     }
 
-    private void addBottomRightCat(BoardPeice.Cat cat)
+    private void addBottomRightCat()
     {
         int x = HORIZONTAL_LENGTH - 2;
         int y = VERTICAL_LENGTH - 2;
@@ -109,13 +118,13 @@ public final class Board
             x -= rand.nextInt(2);
             y -= rand.nextInt(2);
         }
-        cat = board[y][x].new Cat();
-        board[y][x] = cat;
-        cat.setCoordY(y);
-        cat.setCoordX(x);
+        cat2 = board[y][x].new Cat();
+        board[y][x] = cat2;
+        cat2.setCoordY(y);
+        cat2.setCoordX(x);
     }
 
-    private void addTopRightCat(BoardPeice.Cat cat)
+    private void addTopRightCat()
     {
         int x = HORIZONTAL_LENGTH - 2;
         int y = 1;
@@ -124,10 +133,10 @@ public final class Board
             x -= rand.nextInt(2);
             y += rand.nextInt(2);
         }
-        cat = board[y][x].new Cat();
-        board[y][x] = cat;
-        cat.setCoordY(y);
-        cat.setCoordX(x);
+        cat3 = board[y][x].new Cat();
+        board[y][x] = cat3;
+        cat3.setCoordY(y);
+        cat3.setCoordX(x);
     }
 
     private void reveal(int ver, int hor)
@@ -141,17 +150,26 @@ public final class Board
 
     public void generateCheese()
     {
-        int randX = rand.nextInt(HORIZONTAL_LENGTH - 16); //temp
-        int randY = rand.nextInt(VERTICAL_LENGTH - 11);
-        board[randY][randX].setUnderlyingObject(board[randY][randX].new Empty());
+        int randX = rand.nextInt(HORIZONTAL_LENGTH - 1);
+        int randY = rand.nextInt(VERTICAL_LENGTH - 1);
 
-        while (!(board[randY][randX].getClass() == BoardPeice.Unexplored.class 
-        || board[randY][randX].getClass() == BoardPeice.Empty.class) 
+        if (board[randY][randX].getUnderlyingObject() == null)
+        {
+            board[randY][randX].setUnderlyingObject(board[randY][randX].new Empty());
+        }
+
+        while (board[randY][randX].getClass() == BoardPeice.Wall.class 
+        || board[randY][randX].getClass() == BoardPeice.Cat.class
+        || board[randY][randX].getClass() == BoardPeice.Mouse.class
         || board[randY][randX].getUnderlyingObject().getClass() != BoardPeice.Empty.class)
         {
-            randX = rand.nextInt(HORIZONTAL_LENGTH - 16);
-            randY =  rand.nextInt(VERTICAL_LENGTH - 11);
-            board[randY][randX].setUnderlyingObject(board[randY][randX].new Empty());
+            randX = rand.nextInt(HORIZONTAL_LENGTH - 1);
+            randY =  rand.nextInt(VERTICAL_LENGTH - 1);
+
+            if (board[randY][randX].getUnderlyingObject() == null)
+            {
+                board[randY][randX].setUnderlyingObject(board[randY][randX].new Empty());
+            }
         }
 
         cheese = board[randY][randX].new Cheese();
@@ -240,14 +258,164 @@ public final class Board
         board[ver][hor] = board[ver][hor].new Dead();
     }
 
-    public void catMoveUp(BoardPeice.Cat cat) //////////////////////////////////////
+    public Random getRand()
     {
-        int oldX = mouse.getCoordX();
-        int oldY = mouse.getCoordY();
-        board[oldY][oldX] = mouse.getUnderlyingObject();
-        mouse.setUnderlyingObject(board[mouse.getCoordY() - 1][mouse.getCoordX()]);
-        board[mouse.getCoordY() - 1][mouse.getCoordX()] = mouse;
-        mouse.setCoordY(mouse.getCoordY() - 1);
+        return rand;
+    }
+
+    public BoardPeice.Cat getCat1()
+    {
+        return cat1;
+    }
+
+    public BoardPeice.Cat getCat2()
+    {
+        return cat2;
+    }
+
+    public BoardPeice.Cat getCat3()
+    {
+        return cat3;
+    }
+
+    public Boolean catCanMoveUp(BoardPeice.Cat cat)
+    {
+        if ((board[cat.getCoordY() - 1][cat.getCoordX()].getClass() == BoardPeice.Unexplored.class
+        && board[cat.getCoordY() - 1][cat.getCoordX()].getUnderlyingObject().getClass() == BoardPeice.Empty.class)
+        || board[cat.getCoordY() - 1][cat.getCoordX()].getClass() == BoardPeice.Empty.class
+        || board[cat.getCoordY() - 1][cat.getCoordX()].getClass() == BoardPeice.Cheese.class
+        || board[cat.getCoordY() - 1][cat.getCoordX()].getClass() == BoardPeice.Cat.class)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void catMoveUp(BoardPeice.Cat cat)
+    {
+        if (board[cat.getCoordY() - 1][cat.getCoordX()].getClass() != BoardPeice.Cat.class)
+        {
+            BoardPeice tempCat = board[cat.getCoordY()][cat.getCoordX()];
+            if (tempCat.getUnderlyingObject() == null)
+            {
+                tempCat.setUnderlyingObject(tempCat.new Empty());
+            }
+
+            board[cat.getCoordY()][cat.getCoordX()] = tempCat.getUnderlyingObject();
+            board[cat.getCoordY()][cat.getCoordX()].setUnderlyingObject(board[cat.getCoordY()][cat.getCoordX()].new Empty());
+            tempCat.setUnderlyingObject(board[cat.getCoordY() - 1][cat.getCoordX()]);
+            board[cat.getCoordY() - 1][cat.getCoordX()] = tempCat;
+            cat.setCoordY(cat.getCoordY() - 1);
+        }
+        else
+        {
+            catMoveDown(cat);
+        }
+    }
+
+    public Boolean catCanMoveDown(BoardPeice.Cat cat)
+    {
+        if ((board[cat.getCoordY() + 1][cat.getCoordX()].getClass() == BoardPeice.Unexplored.class
+        && board[cat.getCoordY() + 1][cat.getCoordX()].getUnderlyingObject().getClass() == BoardPeice.Empty.class)
+        || board[cat.getCoordY() + 1][cat.getCoordX()].getClass() == BoardPeice.Empty.class
+        || board[cat.getCoordY() + 1][cat.getCoordX()].getClass() == BoardPeice.Cheese.class
+        || board[cat.getCoordY() + 1][cat.getCoordX()].getClass() == BoardPeice.Cat.class)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void catMoveDown(BoardPeice.Cat cat)
+    {
+        if (board[cat.getCoordY() + 1][cat.getCoordX()].getClass() != BoardPeice.Cat.class)
+        {
+            BoardPeice tempCat = board[cat.getCoordY()][cat.getCoordX()];
+            if (tempCat.getUnderlyingObject() == null)
+            {
+                tempCat.setUnderlyingObject(tempCat.new Empty());
+            }
+            
+            board[cat.getCoordY()][cat.getCoordX()] = tempCat.getUnderlyingObject();
+            board[cat.getCoordY()][cat.getCoordX()].setUnderlyingObject(board[cat.getCoordY()][cat.getCoordX()].new Empty());
+            tempCat.setUnderlyingObject(board[cat.getCoordY() + 1][cat.getCoordX()]);
+            board[cat.getCoordY() + 1][cat.getCoordX()] = tempCat;
+            cat.setCoordY(cat.getCoordY() + 1);
+        }
+        else
+        {
+            catMoveUp(cat);
+        }
+    }
+
+    public Boolean catCanMoveRight(BoardPeice.Cat cat)
+    {
+        if ((board[cat.getCoordY()][cat.getCoordX() + 1].getClass() == BoardPeice.Unexplored.class
+        && board[cat.getCoordY()][cat.getCoordX() + 1].getUnderlyingObject().getClass() == BoardPeice.Empty.class)
+        || board[cat.getCoordY()][cat.getCoordX() + 1].getClass() == BoardPeice.Empty.class
+        || board[cat.getCoordY()][cat.getCoordX() + 1].getClass() == BoardPeice.Cheese.class
+        || board[cat.getCoordY()][cat.getCoordX() + 1].getClass() == BoardPeice.Cat.class)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void catMoveRight(BoardPeice.Cat cat)
+    {
+        if (board[cat.getCoordY()][cat.getCoordX() + 1].getClass() != BoardPeice.Cat.class)
+        {
+            BoardPeice tempCat = board[cat.getCoordY()][cat.getCoordX()];
+            if (tempCat.getUnderlyingObject() == null)
+            {
+                tempCat.setUnderlyingObject(tempCat.new Empty());
+            }
+
+            board[cat.getCoordY()][cat.getCoordX()] = tempCat.getUnderlyingObject();
+            board[cat.getCoordY()][cat.getCoordX()].setUnderlyingObject(board[cat.getCoordY()][cat.getCoordX()].new Empty());
+            tempCat.setUnderlyingObject(board[cat.getCoordY()][cat.getCoordX() + 1]);
+            board[cat.getCoordY()][cat.getCoordX() + 1] = tempCat;
+            cat.setCoordX(cat.getCoordX() + 1);
+        }
+        else
+        {
+            catMoveLeft(cat);
+        }
+    }
+
+    public Boolean catCanMoveLeft(BoardPeice.Cat cat)
+    {
+        if ((board[cat.getCoordY()][cat.getCoordX() - 1].getClass() == BoardPeice.Unexplored.class
+        && board[cat.getCoordY()][cat.getCoordX() - 1].getUnderlyingObject().getClass() == BoardPeice.Empty.class)
+        || board[cat.getCoordY()][cat.getCoordX() - 1].getClass() == BoardPeice.Empty.class
+        || board[cat.getCoordY()][cat.getCoordX() - 1].getClass() == BoardPeice.Cheese.class
+        || board[cat.getCoordY()][cat.getCoordX() - 1].getClass() == BoardPeice.Cat.class)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void catMoveLeft(BoardPeice.Cat cat)
+    {
+        if (board[cat.getCoordY()][cat.getCoordX() - 1].getClass() != BoardPeice.Cat.class)
+        {
+            BoardPeice tempCat = board[cat.getCoordY()][cat.getCoordX()];
+            if (tempCat.getUnderlyingObject() == null)
+            {
+                tempCat.setUnderlyingObject(tempCat.new Empty());
+            }
+
+            board[cat.getCoordY()][cat.getCoordX()] = tempCat.getUnderlyingObject();
+            board[cat.getCoordY()][cat.getCoordX()].setUnderlyingObject(board[cat.getCoordY()][cat.getCoordX()].new Empty());
+            tempCat.setUnderlyingObject(board[cat.getCoordY()][cat.getCoordX() - 1]);
+            board[cat.getCoordY()][cat.getCoordX() - 1] = tempCat;
+            cat.setCoordX(cat.getCoordX() - 1);
+        }
+        else
+        {
+            catMoveRight(cat);
+        }
     }
 
     public void mouseMoveUp()

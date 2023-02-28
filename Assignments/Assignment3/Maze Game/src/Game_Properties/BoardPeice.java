@@ -1,5 +1,13 @@
 package Game_Properties;
 
+/**
+* Description: This BoardPeice class contains many subclasses of the board peices used in the Maze game. It includes
+* the various variables each of the BoardPeices contain.
+*
+* @author Daniel Tolsky
+* @version 1.0
+*/
+
 public class BoardPeice 
 {
     private BoardPeice underlyingObject;
@@ -73,9 +81,21 @@ public class BoardPeice
 
     public final class Cat extends BoardPeice
     {
+        String lastMove;
         public Cat()
         {
             super('!');
+            lastMove = "";
+        }
+
+        public String getLastMove()
+        {
+            return lastMove;
+        }
+
+        public void setLastMove(String move)
+        {
+            lastMove = move;
         }
     }
 
