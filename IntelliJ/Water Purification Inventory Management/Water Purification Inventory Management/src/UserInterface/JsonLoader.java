@@ -6,10 +6,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.*;
 
 /**
 * Description: This JsonLoader class handles the loading of water purification unit data
@@ -22,25 +19,25 @@ import org.json.simple.parser.ParseException;
 
 public class JsonLoader 
 {
-    private JSONArray dataJSON;
+    private JsonArray dataJSON;
 
     public JsonLoader()
-    { 
-        dataJSON = new JSONArray();
+    {
+        dataJSON = new JsonArray();
     }
 
     public ArrayList<Unit> loadJson(Scanner scan, String filePath)
     {
         ArrayList<Unit> units = new ArrayList<Unit>();
-        JSONParser parser = new JSONParser();
+        JsonParser parser = new JsonParser();
 
         try (FileReader reader = new FileReader(filePath)) 
         {
             Object obj = parser.parse(reader);
-            dataJSON = (JSONArray) obj;
+            dataJSON = (JsonArray) obj;
             units = listThroughJSONUnits(units);
         } 
-        catch (IOException | ParseException exception) 
+        catch (IOException exception)
         {
             System.out.println(">File not found; please verify that the file location is a full path to the file<");
         }
@@ -51,16 +48,18 @@ public class JsonLoader
     {
         for (Object jsonObject : dataJSON)
         {
-            JSONObject unitObject = (JSONObject) jsonObject;
+            JsonObject unitObject = (JsonObject) jsonObject;
             Unit newUnit = new Unit();
-            
-            newUnit.setModel((String) unitObject.get("model"));
-            newUnit.setSerialNumber((String) unitObject.get("serialNumber"));
-            newUnit.setDateShipped((String) unitObject.get("dateShipped"));
 
-            if (newUnit.getDateShipped() == null)
+            newUnit.setModel(unitObject.get("model").getAsString());
+            newUnit.setSerialNumber(unitObject.get("serialNumber").getAsString());
+            if (unitObject.get("dateShipped") == null)
             {
                 newUnit.setDateShipped("-");
+            }
+            else
+            {
+                newUnit.setDateShipped(unitObject.get("dateShipped").getAsString());
             }
 
             newUnit.setTests(listThroughUnitTests(unitObject, newUnit));
@@ -69,18 +68,19 @@ public class JsonLoader
         return units;
     }
 
-    private ArrayList<Test> listThroughUnitTests(JSONObject unitObject, Unit unit)
+    private ArrayList<Test> listThroughUnitTests(JsonObject unitObject, Unit unit)
     {
-        JSONArray testArray = (JSONArray) unitObject.get("tests");
+        JsonArray testArray = (JsonArray) unitObject.get("tests");
         ArrayList<Test> testsForUnit = new ArrayList<Test>();
 
         for (Object test : testArray)
         {
-            JSONObject testObject = (JSONObject) test;
+            JsonObject testObject = (JsonObject) test;
             Test newTest = new Test();
 
-            newTest.setDate((String) testObject.get("date"));
-            if ((Boolean) testObject.get("isTestPassed"))
+            newTest.setDate((String) testObject.get("date").getAsString());
+
+            if (testObject.get("isTestPassed").getAsBoolean())
             {
                 newTest.setStatus("Passed");
             }
@@ -88,7 +88,7 @@ public class JsonLoader
             {
                 newTest.setStatus("FAILED");
             }
-            newTest.setComment((String) testObject.get("testResultComment"));
+            newTest.setComment(testObject.get("testResultComment").getAsString());
 
             testsForUnit.add(newTest);
         }

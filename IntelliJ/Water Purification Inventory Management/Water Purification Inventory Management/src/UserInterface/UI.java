@@ -385,7 +385,7 @@ public class UI
     private void printReport()
     {
         System.out.println("\nSelect repot option:");
-        System.out.println("1) ALL:\t\t\tAll products");
+        System.out.println("1) ALL:\t\t\t\tAll products");
         System.out.println("2) DEFECTIVE:\t\tProducts which failed their last test");
         System.out.println("3) READY-TO-SHIP\tProducts which passed their test, not shipped");
         System.out.println("4) Cancel");
