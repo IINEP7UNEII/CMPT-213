@@ -15,7 +15,8 @@ import javax.swing.*;
  *    (but you may make changes if you desire)
  */
 @SuppressWarnings("serial")
-public class PicturePanel extends JPanel{
+public class PicturePanel extends JPanel
+{
 	
 	private static final int BORDER_WIDTH = 2; 
 	

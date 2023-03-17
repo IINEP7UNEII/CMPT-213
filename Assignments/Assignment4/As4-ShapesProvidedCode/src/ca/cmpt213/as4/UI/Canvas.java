@@ -11,7 +11,8 @@ import java.awt.Color;
  * ** YOU DO NOT NEED TO CHANGE ANYTHING IN THIS FILE **
  *    (but you may make changes if you desire)
  */
-public class Canvas {
+public class Canvas 
+{
 	// Size of screen to draw.
 	private final int sizeX;
 	private final int sizeY;
@@ -25,7 +26,8 @@ public class Canvas {
 	private final Color[][] color;
 
 	// Create the canvas, initializing the background character to the parameter.
-	public Canvas(int sizeX, int sizeY) {
+	public Canvas(int sizeX, int sizeY) 
+	{
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 
@@ -34,52 +36,65 @@ public class Canvas {
 		
 		initializeArrays();
 	}
-	private void initializeArrays() {
-		for (int y = 0; y < sizeY; y++) {
-			for (int x = 0; x < sizeX; x++) {
+	private void initializeArrays() 
+	{
+		for (int y = 0; y < sizeY; y++) 
+		{
+			for (int x = 0; x < sizeX; x++) 
+			{
 				data[y][x] = FILL_CHARACTER;
 				color[y][x] = BACKGROUND_COLOR;
 			}
 		}
 	}
 
-	public int getSizeX() {
+	public int getSizeX() 
+	{
 		return sizeX;
 	}
-	public int getSizeY() {
+	public int getSizeY() 
+	{
 		return sizeY;
 	}
 
 	// Draw character ch on the canvas at (x, y).
 	// x and y are 0 offsets: (0,0) is top left.
-	public void setCellText(int x, int y, char ch) {
+	public void setCellText(int x, int y, char ch) 
+	{
 		// Set value for cells in viewable area
-		if (isCellInCanvas(x, y)) {
+		if (isCellInCanvas(x, y)) 
+		{
 			data[y][x] = ch;
 		}
 	}
-	public char getCellText(int x, int y) {
+	public char getCellText(int x, int y) 
+	{
 		return data[y][x];
 	}
 
-	public void setCellColor(int x, int y, Color colour) {
+	public void setCellColor(int x, int y, Color colour) 
+	{
 		// Set value for cells in viewable area
-		if (isCellInCanvas(x, y)) {
+		if (isCellInCanvas(x, y)) 
+		{
 			color[y][x] = colour;
 		}
 	}
 
-	public Color getCellColor(int x, int y) {
+	public Color getCellColor(int x, int y) 
+	{
 		// Set value for cells in viewable area
 		return color[y][x];
 	}
-	private boolean isCellInCanvas(int x, int y) {
+	private boolean isCellInCanvas(int x, int y) 
+	{
 		boolean isOkX = (x >= 0) && (x < sizeX);
 		boolean isOkY = (y >= 0) && (y < sizeY);
 		return isOkX && isOkY;
 	}
 
-	public void clear() {
+	public void clear() 
+	{
 		initializeArrays();
 	}
 }

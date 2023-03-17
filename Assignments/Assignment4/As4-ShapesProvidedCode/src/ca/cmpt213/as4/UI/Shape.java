@@ -13,6 +13,20 @@ public class Shape implements DrawableShape
     private String fill;
     private String fillText;
 
+    public Shape()
+    {
+        top = 0;
+        left = 0;
+        width = 0;
+        height = 0;
+        background = "";
+        backgroundColor = "";
+        line = "";
+        lineChar = '0';
+        fill = "";
+        fillText = "";
+    }
+
     public int getTop() 
     {
         return top;
