@@ -51,7 +51,7 @@ public class ShapeModelImpl implements ShapeModel
         } 
         catch (IOException exeption) 
         {
-            exeption.printStackTrace(); //temp solution
+            exeption.printStackTrace();
         }
     }
 
@@ -59,13 +59,15 @@ public class ShapeModelImpl implements ShapeModel
     @Override
     public void redact()
     {
-        // color = Color.LIGHT_GRAY;
-        // int length = text.length();
-        // text = "";
-        // for (int i = 0; i < length; i++)
-        // {
-        //     text += "X";
-        // }
+        for (Shape shape : shapeList)
+        {
+            shape.setLine("char");
+            shape.setLineChar('+');
+            shape.setFill("solid");
+            shape.setFillText("X");
+            shape.setBackground("solid");
+            shape.setBackgroundColor("light gray");
+        }
     }
 
     @Override
