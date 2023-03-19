@@ -1,5 +1,7 @@
 package ca.cmpt213.as4.UI;
 
+import java.awt.Color;
+
 /**
  * Define a graphical shape interface
  */
@@ -25,7 +27,7 @@ public interface DrawableShape
 
     public void setBackground(String background);
 
-    public String getBackgroundColor();
+    public Color getBackgroundColor();
 
     public void setBackgroundColor(String backgroundColor);
 

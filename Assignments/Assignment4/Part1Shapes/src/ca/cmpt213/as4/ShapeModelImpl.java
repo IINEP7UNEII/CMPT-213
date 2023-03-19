@@ -8,7 +8,6 @@ import com.google.gson.JsonArray;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -26,11 +25,11 @@ import java.io.FileReader;
  */
 public class ShapeModelImpl implements ShapeModel
 {
-    private ArrayList<Shape> shapeList;
+    private ShapeList shapeList;
 
     public ShapeModelImpl()
     {
-        shapeList = new ArrayList<Shape>();
+        shapeList = new ShapeList();
     }
 
     // Load objects from file
@@ -46,7 +45,7 @@ public class ShapeModelImpl implements ShapeModel
 
             for (int count = 0; count < jsonArray.size(); ++count) 
             {
-                shapeList.add(shapeJsonSetter(jsonArray.get(count).getAsJsonObject()));
+                shapeList.add(shapeJsonSetter(jsonArray.get(count).getAsJsonObject(), count));
             }
             reader.close();
         } 
@@ -75,7 +74,7 @@ public class ShapeModelImpl implements ShapeModel
         return shapeList.iterator();
     }
 
-    private Shape shapeJsonSetter(JsonObject currObject)
+    private Shape shapeJsonSetter(JsonObject currObject, int index)
     {
         Shape shape = new Shape();
         shape.setTop(currObject.get("top").getAsInt());
@@ -85,9 +84,17 @@ public class ShapeModelImpl implements ShapeModel
         shape.setBackground(currObject.get("background").getAsString());
         shape.setBackgroundColor(currObject.get("backgroundColor").getAsString());
         shape.setLine(currObject.get("line").getAsString());
-        shape.setLineChar(currObject.get("lineChar").getAsString().charAt(0));
+        if (currObject.get("lineChar") != null)
+        {
+            shape.setLineChar(currObject.get("lineChar").getAsString().charAt(0));
+        }
         shape.setFill(currObject.get("fill").getAsString());
         shape.setFillText(currObject.get("fillText").getAsString());
+
+        if (index == 0)
+        {
+            shape.setFirst();
+        }
         return shape;
     }
 }
