@@ -2,7 +2,8 @@ package distribute.restapi;
 
 import java.util.List;
 
-public class ApiBoardWrapper {
+public class ApiBoardWrapper 
+{
     public int boardWidth;
     public int boardHeight;
     public ApiLocationWrapper mouseLocation;

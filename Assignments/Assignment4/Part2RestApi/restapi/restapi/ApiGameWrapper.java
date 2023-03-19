@@ -1,6 +1,7 @@
 package distribute.restapi;
 
-public class ApiGameWrapper {
+public class ApiGameWrapper 
+{
     public int gameNumber;
     public boolean isGameWon;
     public boolean isGameLost;
