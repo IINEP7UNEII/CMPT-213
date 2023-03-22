@@ -157,14 +157,4 @@ public class MazeGame {
 	{
 		return cats;
 	}
-
-	public List<CellLocation> getCatLocations()
-	{
-		List<CellLocation> tempLoc = new ArrayList<>();
-		for (Cat cat : cats)
-		{
-			tempLoc.add(cat.getLocation());
-		}
-		return tempLoc;
-	}
 }

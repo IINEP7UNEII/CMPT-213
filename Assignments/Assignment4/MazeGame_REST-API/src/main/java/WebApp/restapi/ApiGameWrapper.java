@@ -13,30 +13,27 @@ import WebApp.model.MazeGame;
 
 public class ApiGameWrapper
 {
-    MazeGame game;
     public long gameNumber;
     public boolean isGameWon;
     public boolean isGameLost;
     public int numCheeseFound;
     public int numCheeseGoal;
-    public ApiBoardWrapper board;
 
     public ApiGameWrapper()
     {
-        game = new MazeGame();
+        gameNumber = 0;
         isGameWon = false;
         isGameLost = false;
-        numCheeseFound = game.getNumberCheeseCollected();
-        numCheeseGoal = game.getNumberCheeseToCollect();
-        board = new ApiBoardWrapper(game);
+        numCheeseFound = 0;
+        numCheeseGoal = 0;
     }
 
-    public MazeGame getGame()
+    public ApiGameWrapper(MazeGame game, long index)
     {
-        return game;
-    }
-    public ApiBoardWrapper getBoard()
-    {
-        return board;
+        gameNumber = index;
+        isGameWon = game.hasUserWon();
+        isGameLost = game.hasUserLost();
+        numCheeseFound = game.getNumberCheeseCollected();
+        numCheeseGoal = game.getNumberCheeseToCollect();
     }
 }

@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @RestController
 public class GameController
 {
-    private ArrayList<ApiGameWrapper> games = new ArrayList<>();
+    private ArrayList<MazeGame> games = new ArrayList<>();
     private AtomicLong nextGameID = new AtomicLong();
 
     @GetMapping("/api/about")
@@ -38,28 +38,35 @@ public class GameController
     @ResponseStatus(HttpStatus.OK)
     public ArrayList<ApiGameWrapper> getGameList()
     {
-        return games;
+        ArrayList<ApiGameWrapper> tempApiGames = new ArrayList<>();
+        for (int count = 0; count < games.size(); ++count)
+        {
+            tempApiGames.add(new ApiGameWrapper(games.get(count), count));
+        }
+
+        return tempApiGames;
     }
 
     @PostMapping("/api/games")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiGameWrapper createNewGame()
     {
-        ApiGameWrapper game = new ApiGameWrapper();
-        game.gameNumber = nextGameID.incrementAndGet();
+        MazeGame game = new MazeGame();
+        ApiGameWrapper apiGame = new ApiGameWrapper(game, nextGameID.incrementAndGet());
         games.add(game);
-        return game;
+        return apiGame;
     }
 
     @GetMapping("/api/games/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ApiGameWrapper getGame(@PathVariable("id") long gameID)
     {
-        for (ApiGameWrapper game : games)
+        for (int count = 0; count < games.size(); ++count)
         {
-            if (game.gameNumber == gameID)
+            ApiGameWrapper apiGame = new ApiGameWrapper(games.get(count), count + 1);
+            if (apiGame.gameNumber == gameID)
             {
-                return game;
+                return apiGame;
             }
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERROR: Game not found");
@@ -69,11 +76,13 @@ public class GameController
     @ResponseStatus(HttpStatus.OK)
     public ApiBoardWrapper getBoard(@PathVariable("id") long gameID)
     {
-        for (ApiGameWrapper game : games)
+        for (int count = 0; count < games.size(); ++count)
         {
-            if (game.gameNumber == gameID)
+            ApiGameWrapper apiGame = new ApiGameWrapper(games.get(count), count + 1);
+            ApiBoardWrapper apiBoard = new ApiBoardWrapper(games.get(count));
+            if (apiGame.gameNumber == gameID)
             {
-                return game.board;
+                return apiBoard;
             }
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERROR: Game not found");
@@ -83,24 +92,23 @@ public class GameController
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void newMove(@PathVariable("id") long gameID, @RequestBody String move)
     {
-        for (ApiGameWrapper game : games)
+        for (int count = 0; count < games.size(); ++count)
         {
-            if (game.gameNumber == gameID)
+            ApiGameWrapper apiGame = new ApiGameWrapper(games.get(count), count + 1);
+            if (apiGame.gameNumber == gameID)
             {
                 if (stringToMoveDirection(move) == null)
                 {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERROR: Invalid move, please select a valid move");
                 }
-                else if (game.getGame().isValidPlayerMove(stringToMoveDirection(move)))
+                else if (stringToMoveDirection(move).equals(MOVE_CATS))
                 {
-                    game.getGame().recordPlayerMove(stringToMoveDirection(move));
-                    game.getBoard().mouseLocation = new ApiLocationWrapper(game.getGame().getMouseLocation());
+                    games.get(count).doCatMoves();
                     return;
                 }
-                else if (move.equals("MOVE_CATS"))
+                else if (games.get(count).isValidPlayerMove(stringToMoveDirection(move)))
                 {
-                    game.getGame().doCatMoves();
-                    game.getBoard().catLocations = catApiLocations(game.getGame().getCatLocations());
+                    games.get(count).recordPlayerMove(stringToMoveDirection(move));
                     return;
                 }
                 else
@@ -116,17 +124,17 @@ public class GameController
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void cheats(@PathVariable("id") long gameID, @RequestBody String cheat)
     {
-        for (ApiGameWrapper game : games)
+        for (int count = 0; count < games.size(); ++count)
         {
-            if (game.gameNumber == gameID)
+            ApiGameWrapper apiGame = new ApiGameWrapper(games.get(count), count + 1);
+            if (apiGame.gameNumber == gameID)
             {
                 switch (cheat) {
                     case "1_CHEESE" -> {
-                        game.getGame().setNumberCheeseToCollect(1);
-                        game.numCheeseGoal = 1;
+                        games.get(count).setNumberCheeseToCollect(1);
                         return; }
                     case "SHOW_ALL" -> {
-                        makeAllVisible(game.getBoard());
+                        games.get(count).getMaze().makeAllCellsVisible();
                         return; }
                     default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERROR: Invalid cheat selected");
                 }
@@ -156,16 +164,5 @@ public class GameController
                 board.isVisible[countY][countX] = true;
             }
         }
-    }
-
-    private List<ApiLocationWrapper> catApiLocations(List<CellLocation> catCells)
-    {
-        List<ApiLocationWrapper> tempLoc = new ArrayList<>();
-        for (CellLocation cell : catCells)
-        {
-            ApiLocationWrapper apiLoc = new ApiLocationWrapper(cell);
-            tempLoc.add(apiLoc);
-        }
-        return tempLoc;
     }
 }
