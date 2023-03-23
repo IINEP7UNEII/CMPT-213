@@ -388,69 +388,89 @@ public class Shape implements DrawableShape
         return formatted;
     }
 
-    private String[] lineBuilder(String str, int horSpace, int vertSpace)
+    private String[] lineBuilder(String str, int horSpace, int vertSpace) 
     {
         String[] words = str.split(" ");
         String[] lines = new String[vertSpace];
         int lineCount = 0;
         StringBuilder lineBuild = new StringBuilder();
-
+    
         for (int wordIndex = 0; wordIndex < words.length && lineCount < vertSpace; ++wordIndex) 
         {
             if (words[wordIndex].length() > horSpace) 
             {
-                String remainingWord = words[wordIndex];
-                while (remainingWord.length() > 0 && lineCount < vertSpace)
-                {
-                    if (remainingWord.length() < (lineBuild.length() + horSpace))
-                    {
-                        if (remainingWord.length() > horSpace)
-                        {
-                            lines[lineCount] = lineBuild.toString().trim();
-                            lineBuild.setLength(0);
-                            ++lineCount;
-                        }
-
-                        lineBuild.append(remainingWord);
-                        lines[lineCount] = lineBuild.toString().trim();
-                        remainingWord = "";
-                    }
-                    else 
-                    {
-                        String subWord = remainingWord.substring(0, horSpace - lineBuild.length());
-                        remainingWord = remainingWord.substring(horSpace - lineBuild.length());
-                        lineBuild.append(subWord);
-                        lines[lineCount] = lineBuild.toString().trim();
-                    }
-                    ++lineCount;
-                    lineBuild.setLength(0);
-                }
-            }
-            else if (lineBuild.length() + words[wordIndex].length() <= horSpace) 
-            {
-                lineBuild.append(words[wordIndex]);
-                lineBuild.append(" ");
-            }
+                lineCount = buildLongWordLines(words[wordIndex], lineBuild, lines, horSpace, vertSpace, lineCount);
+            } 
             else 
             {
-                lines[lineCount] = lineBuild.toString().trim();
-                lineBuild.setLength(0);
-                lineBuild.append(words[wordIndex]);
-                lineBuild.append(" ");
-                ++lineCount;
+                lineCount = buildShortWordLines(words[wordIndex], lineBuild, lines, horSpace, vertSpace, lineCount);
             }
         }
-
+    
         if (lineBuild.length() > 0 && lineCount < vertSpace) 
         {
             lines[lineCount] = lineBuild.toString().trim();
             ++lineCount;
         }
+    
+        fillEmptyLines(lines, lineCount, vertSpace);
+        return lines;
+    }
+    
+    private int buildLongWordLines(String word, StringBuilder lineBuild, String[] lines, int horSpace, int vertSpace, int lineCount) 
+    {
+        String remainingWord = word;
 
-        for (; lineCount < vertSpace; ++lineCount)
+        while (remainingWord.length() > 0 && lineCount < vertSpace) 
+        {
+            if (remainingWord.length() < (lineBuild.length() + horSpace)) 
+            {
+                if (remainingWord.length() > horSpace) 
+                {
+                    lines[lineCount] = lineBuild.toString().trim();
+                    lineBuild.setLength(0);
+                    ++lineCount;
+                }
+                lineBuild.append(remainingWord);
+                lines[lineCount] = lineBuild.toString().trim();
+                remainingWord = "";
+            } 
+            else 
+            {
+                String subWord = remainingWord.substring(0, horSpace - lineBuild.length());
+                remainingWord = remainingWord.substring(horSpace - lineBuild.length());
+                lineBuild.append(subWord);
+                lines[lineCount] = lineBuild.toString().trim();
+            }
+            ++lineCount;
+            lineBuild.setLength(0);
+        }
+        return lineCount;
+    }
+    
+    private int buildShortWordLines(String word, StringBuilder lineBuild, String[] lines, int horSpace, int vertSpace, int lineCount) 
+    {
+        if (lineBuild.length() + word.length() <= horSpace) 
+        {
+            lineBuild.append(word);
+            lineBuild.append(" ");
+        } 
+        else 
+        {
+            lines[lineCount] = lineBuild.toString().trim();
+            lineBuild.setLength(0);
+            lineBuild.append(word);
+            lineBuild.append(" ");
+            ++lineCount;
+        }
+        return lineCount;
+    }
+    
+    private void fillEmptyLines(String[] lines, int lineCount, int vertSpace) 
+    {
+        for (; lineCount < vertSpace; ++lineCount) 
         {
             lines[lineCount] = "";
         }
-        return lines;
     }
 }
