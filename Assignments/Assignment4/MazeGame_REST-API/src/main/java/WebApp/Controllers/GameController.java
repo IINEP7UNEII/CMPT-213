@@ -154,15 +154,4 @@ public class GameController
             default -> null;
         };
     }
-
-    private void makeAllVisible(ApiBoardWrapper board)
-    {
-        for (int countY = 0; countY < board.boardHeight; ++countY)
-        {
-            for (int countX = 0; countX < board.boardWidth; ++countX)
-            {
-                board.isVisible[countY][countX] = true;
-            }
-        }
-    }
 }

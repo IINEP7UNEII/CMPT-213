@@ -187,7 +187,7 @@ public class Shape implements DrawableShape
 
                 if (isBorder(rowCount - top, colCount - left))
                 {
-                    canvas.setCellText(colCount, rowCount, getCurrCellLine(rowCount, colCount));
+                    canvas.setCellText(colCount, rowCount, getCurrShapeBorder(rowCount, colCount));
                 }
                 else
                 {
@@ -235,21 +235,19 @@ public class Shape implements DrawableShape
         return cellColor;
     }
 
-    private char getCurrCellLine(int currRow, int currCol) 
+    private char getCurrShapeBorder(int currRow, int currCol) 
     {
         char currCellChar = lineChar;
+        Border border = new Border(lineChar, width, height);
 
         switch (line)
         {
             case "char":
                 break;
 
-            case "ascii line":
-                currCellChar = asciiLine(currRow - top, currCol - left);
-                break;
-
-            case "sequence":
-                currCellChar = sequence(currRow - top, currCol - left);
+            default:
+                border.setType(line);
+                currCellChar = border.getChar(currRow - top, currCol - left);
                 break;
         }
 
@@ -271,81 +269,6 @@ public class Shape implements DrawableShape
         }
 
         return currCellChar;
-    }
-
-
-    private char asciiLine(int currRowInCell, int currColInCell)
-    {
-        char cellChar = lineChar;
-
-        if (isSmall())
-        {
-            cellChar = '■';
-        }
-        else if (currRowInCell == 0 && currColInCell == 0)
-        {
-            cellChar = '╔';
-        }
-        else if (currRowInCell == 0 && currColInCell == (width - 1))
-        {
-            cellChar = '╗';
-        }
-        else if (currRowInCell == (height - 1) && currColInCell == 0)
-        {
-            cellChar = '╚';
-        }
-        else if (currRowInCell == (height - 1) && currColInCell == (width - 1))
-        {
-            cellChar = '╝';
-        }
-        else if (currRowInCell == 0 || currRowInCell == (height - 1))
-        {
-            cellChar = '═';
-        }
-        else if (currColInCell == 0 || currColInCell == (width - 1))
-        {
-            cellChar = '║';
-        }
-        return cellChar;
-    }
-
-    private Boolean isSmall()
-    {
-        if (width == 1 || height == 1)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    private char sequence(int currRowInShape, int currColInShape)
-    {
-        char cellChar = lineChar;
-        int cellInt = 0;
-
-        int lastIntTop = width % 5;
-        int lastIntRight = (width + height - 1) % 5;
-        int lastIntBottom = ((width * 2) + height - 2) % 5;
-
-        if (currRowInShape == 0) //if at top
-        {
-            cellInt = (currColInShape % 5) + 1;
-        }
-        else if (currColInShape == (width - 1)) //if at right
-        {
-            cellInt = ((lastIntTop + (currRowInShape - 1)) % 5) + 1;
-        }
-        else if (currRowInShape == (height - 1)) //if at bottom
-        {
-            cellInt = ((lastIntRight + (width - currColInShape - 2)) % 5) + 1;
-        }
-        else if (currColInShape == 0) //if at left
-        {
-            cellInt = ((lastIntBottom + (height - currRowInShape - 2)) % 5) + 1;
-        }
-        
-        cellChar = (char) (cellInt + 48);
-        return cellChar;
     }
 
     private Boolean isBorder(int currRowInShape, int currColInShape)

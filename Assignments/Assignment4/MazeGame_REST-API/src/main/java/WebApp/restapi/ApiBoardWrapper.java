@@ -21,7 +21,7 @@ public class ApiBoardWrapper
     public boolean[][] hasWalls;
     public boolean[][] isVisible;
 
-//     Accept whatever object(s) you need to populate this object.
+    //     Accept whatever object(s) you need to populate this object.
     public ApiBoardWrapper(MazeGame game)
     {
         boardWidth = game.getMaze().getWidth();

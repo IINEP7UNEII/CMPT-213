@@ -19,14 +19,4 @@ public class ApiLocationWrapper
         x = loc.getX();
         y = loc.getY();
     }
-
-    public void setX(int newX)
-    {
-        x = newX;
-    }
-
-    public void setY(int newY)
-    {
-        y = newY;
-    }
 }

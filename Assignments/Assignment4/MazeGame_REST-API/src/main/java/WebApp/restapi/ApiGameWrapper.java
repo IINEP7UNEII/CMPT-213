@@ -19,15 +19,6 @@ public class ApiGameWrapper
     public int numCheeseFound;
     public int numCheeseGoal;
 
-    public ApiGameWrapper()
-    {
-        gameNumber = 0;
-        isGameWon = false;
-        isGameLost = false;
-        numCheeseFound = 0;
-        numCheeseGoal = 0;
-    }
-
     public ApiGameWrapper(MazeGame game, long index)
     {
         gameNumber = index;
