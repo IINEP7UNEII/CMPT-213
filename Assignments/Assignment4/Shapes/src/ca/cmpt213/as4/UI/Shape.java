@@ -174,7 +174,7 @@ public class Shape implements DrawableShape
     // This object should draw itself onto the canvas
 	public void draw(Canvas canvas)
 	{
-        if (isFirstShape)
+        if (isFirst())
         {
             canvas.clear();
         }
@@ -447,7 +447,7 @@ public class Shape implements DrawableShape
             ++lineCount;
         }
 
-        for (; lineCount < vertSpace; lineCount++)
+        for (; lineCount < vertSpace; ++lineCount)
         {
             lines[lineCount] = "";
         }
