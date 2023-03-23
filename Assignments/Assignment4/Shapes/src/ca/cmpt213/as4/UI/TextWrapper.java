@@ -1,5 +1,14 @@
 package ca.cmpt213.as4.UI;
 
+/**
+ * Description: This TextWrapper class is responsible for the generating of wrapper text inside of the "text box"
+ * of the shape. Here there are methods which handle the generation of text lines and formatting them in
+ * accordinace with the dimensions of the given shape.
+ *
+ * @author Daniel Tolsky
+ * @version 1.0
+ */
+
 public class TextWrapper 
 {
     private String text;

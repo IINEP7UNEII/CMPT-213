@@ -1,5 +1,16 @@
 package ca.cmpt213.as4.UI;
 
+/**
+ * Description: This Border class is responsible for the creating of a border around the given shape object
+ * with given information such as the dimsensions and style (type) of border. To create a new border, we simply create
+ * pass the border character, width, and height as argumetns to the Border() constructor and get our specific
+ * border character using the getChar() method which provides a single character as border for a specific
+ * location on the border of the shape.
+ *
+ * @author Daniel Tolsky
+ * @version 1.0
+ */
+
 public class Border 
 {
     private char lineChar;
