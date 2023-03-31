@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="aa94d19e-78a4-467b-a24c-07b06d6217ce" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../Shapes/lib/gson-2.10.1.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/.idea/libraries/google_code_gson.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Shapes/.idea/libraries/google_code_gson.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/As4-Shapes.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../Shapes/As4-Shapes.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/JSONFiles/colors.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/JSONFiles/fill_text.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/JSONFiles/line_styles.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/JSONFiles/simple.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/lib/gson-2.9.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/out/production/As4-Shapes/ca/cmpt213/as4/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/out/production/As4-Shapes/ca/cmpt213/as4/ShapeModel.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/out/production/As4-Shapes/ca/cmpt213/as4/ShapeModelImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/out/production/As4-Shapes/ca/cmpt213/as4/UI/Canvas.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/out/production/As4-Shapes/ca/cmpt213/as4/UI/DrawableShape.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/out/production/As4-Shapes/ca/cmpt213/as4/UI/GUI.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/out/production/As4-Shapes/ca/cmpt213/as4/UI/PicturePanel$CanvasIcon.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/out/production/As4-Shapes/ca/cmpt213/as4/UI/PicturePanel.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/out/production/As4-Shapes/ca/cmpt213/as4/UI/Shape.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Shapes/out/production/As4-Shapes/ca/cmpt213/as4/UnicodeFun.class" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2NRWixWYD35jWrBdK40fmGMgcLt" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Daniel/Documents/Code/Java/CMPT-213/Assignments/Assignment4/submit&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Daniel\Documents\Code\Java\CMPT-213\Assignments\Assignment4\submit" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Daniel\Documents\Code\Java\CMPT-213\Assignments\Assignment4\submit" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ca.cmpt213.as4.Main" />
+      <module name="submit" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ca.cmpt213.as4.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="aa94d19e-78a4-467b-a24c-07b06d6217ce" name="Changes" comment="" />
+      <created>1679627506217</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1679627506217</updated>
+      <workItem from="1679627507384" duration="356000" />
+      <workItem from="1680244015089" duration="87000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
