@@ -1,4 +1,4 @@
-package WebApp.Model;
+package CoursePlanner.Model;
 
 public class Main 
 {
@@ -6,6 +6,6 @@ public class Main
     {
         CSVReader reader = new CSVReader();
         reader.readCSVFile();
-        reader.printCSV();
+        reader.dumpCSV();
     }
 }

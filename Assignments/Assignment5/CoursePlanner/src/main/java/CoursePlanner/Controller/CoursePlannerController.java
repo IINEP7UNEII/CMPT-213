@@ -1,15 +1,12 @@
 package CoursePlanner.Controller;
 
-import CoursePlanner.RestAPI.*;
-import CoursePlanner.model.*;
-import static CoursePlanner.model.MoveDirection.*;
+import CoursePlanner.Model.*;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+//import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Description: This GameController class is the main class where the REST API is implemented.
@@ -21,10 +18,9 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 
 @RestController
-public class GameController
+public class CoursePlannerController
 {
-    private ArrayList<MazeGame> games = new ArrayList<>();
-    private AtomicLong nextGameID = new AtomicLong();
+    private ArrayList<CSVReader> files = new ArrayList<>();
 
     @GetMapping("/api/about")
     @ResponseStatus(HttpStatus.OK)
@@ -33,124 +29,121 @@ public class GameController
         return "Daniel Tolsky";
     }
 
-    @GetMapping("/api/games")
+    @GetMapping("/api/dump-model")
     @ResponseStatus(HttpStatus.OK)
-    public ArrayList<ApiGameWrapper> getGameList()
+    public void getGameList()
     {
-        ArrayList<ApiGameWrapper> tempApiGames = new ArrayList<>();
-        for (int count = 0; count < games.size(); ++count)
-        {
-            tempApiGames.add(new ApiGameWrapper(games.get(count), count));
-        }
-
-        return tempApiGames;
+        CSVReader reader = new CSVReader();
+        reader.readCSVFile();
+        files.add(reader);
+        files.get(files.size() - 1).dumpCSV();
     }
 
-    @PostMapping("/api/games")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ApiGameWrapper createNewGame()
-    {
-        MazeGame game = new MazeGame();
-        ApiGameWrapper apiGame = new ApiGameWrapper(game, nextGameID.incrementAndGet());
-        games.add(game);
-        return apiGame;
-    }
+    // @PostMapping("/api/games")
+    // @ResponseStatus(HttpStatus.CREATED)
+    // public ApiGameWrapper createNewGame()
+    // {
+    //     MazeGame game = new MazeGame();
+    //     ApiGameWrapper apiGame = new ApiGameWrapper(game, nextGameID.incrementAndGet());
+    //     games.add(game);
+    //     return apiGame;
+    // }
 
-    @GetMapping("/api/games/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiGameWrapper getGame(@PathVariable("id") long gameID)
-    {
-        for (int count = 0; count < games.size(); ++count)
-        {
-            ApiGameWrapper apiGame = new ApiGameWrapper(games.get(count), count + 1);
-            if (apiGame.gameNumber == gameID)
-            {
-                return apiGame;
-            }
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERROR: Game not found");
-    }
+    // @GetMapping("/api/games/{id}")
+    // @ResponseStatus(HttpStatus.OK)
+    // public ApiGameWrapper getGame(@PathVariable("id") long gameID)
+    // {
+    //     for (int count = 0; count < games.size(); ++count)
+    //     {
+    //         ApiGameWrapper apiGame = new ApiGameWrapper(games.get(count), count + 1);
+    //         if (apiGame.gameNumber == gameID)
+    //         {
+    //             return apiGame;
+    //         }
+    //     }
+    //     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERROR: Game not found");
+    // }
 
-    @GetMapping("/api/games/{id}/board")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiBoardWrapper getBoard(@PathVariable("id") long gameID)
-    {
-        for (int count = 0; count < games.size(); ++count)
-        {
-            ApiGameWrapper apiGame = new ApiGameWrapper(games.get(count), count + 1);
-            ApiBoardWrapper apiBoard = new ApiBoardWrapper(games.get(count));
-            if (apiGame.gameNumber == gameID)
-            {
-                return apiBoard;
-            }
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERROR: Game not found");
-    }
+    // @GetMapping("/api/games/{id}/board")
+    // @ResponseStatus(HttpStatus.OK)
+    // public ApiBoardWrapper getBoard(@PathVariable("id") long gameID)
+    // {
+    //     for (int count = 0; count < games.size(); ++count)
+    //     {
+    //         ApiGameWrapper apiGame = new ApiGameWrapper(games.get(count), count + 1);
+    //         ApiBoardWrapper apiBoard = new ApiBoardWrapper(games.get(count));
+    //         if (apiGame.gameNumber == gameID)
+    //         {
+    //             return apiBoard;
+    //         }
+    //     }
+    //     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERROR: Game not found");
+    // }
 
-    @PostMapping("/api/games/{id}/moves")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void newMove(@PathVariable("id") long gameID, @RequestBody String move)
-    {
-        for (int count = 0; count < games.size(); ++count)
-        {
-            ApiGameWrapper apiGame = new ApiGameWrapper(games.get(count), count + 1);
-            if (apiGame.gameNumber == gameID)
-            {
-                if (stringToMoveDirection(move) == null)
-                {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERROR: Invalid move, please select a valid move");
-                }
-                else if (stringToMoveDirection(move).equals(MOVE_CATS))
-                {
-                    games.get(count).doCatMoves();
-                    return;
-                }
-                else if (games.get(count).isValidPlayerMove(stringToMoveDirection(move)))
-                {
-                    games.get(count).recordPlayerMove(stringToMoveDirection(move));
-                    return;
-                }
-                else
-                {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERROR: Invalid move, mouse will move into wall");
-                }
-            }
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERROR: Game not found");
-    }
+    // @PostMapping("/api/games/{id}/moves")
+    // @ResponseStatus(HttpStatus.ACCEPTED)
+    // public void newMove(@PathVariable("id") long gameID, @RequestBody String move)
+    // {
+    //     for (int count = 0; count < games.size(); ++count)
+    //     {
+    //         ApiGameWrapper apiGame = new ApiGameWrapper(games.get(count), count + 1);
+    //         if (apiGame.gameNumber == gameID)
+    //         {
+    //             if (stringToMoveDirection(move) == null)
+    //             {
+    //                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERROR: Invalid move, please select a valid move");
+    //             }
+    //             else if (stringToMoveDirection(move).equals(MOVE_CATS))
+    //             {
+    //                 games.get(count).doCatMoves();
+    //                 return;
+    //             }
+    //             else if (games.get(count).isValidPlayerMove(stringToMoveDirection(move)))
+    //             {
+    //                 games.get(count).recordPlayerMove(stringToMoveDirection(move));
+    //                 return;
+    //             }
+    //             else
+    //             {
+    //                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERROR: Invalid move, mouse will move into wall");
+    //             }
+    //         }
+    //     }
+    //     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERROR: Game not found");
+    // }
 
-    @PostMapping("/api/games/{id}/cheatstate")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void cheats(@PathVariable("id") long gameID, @RequestBody String cheat)
-    {
-        for (int count = 0; count < games.size(); ++count)
-        {
-            ApiGameWrapper apiGame = new ApiGameWrapper(games.get(count), count + 1);
-            if (apiGame.gameNumber == gameID)
-            {
-                switch (cheat) {
-                    case "1_CHEESE" -> {
-                        games.get(count).setNumberCheeseToCollect(1);
-                        return; }
-                    case "SHOW_ALL" -> {
-                        games.get(count).getMaze().makeAllCellsVisible();
-                        return; }
-                    default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERROR: Invalid cheat selected");
-                }
-            }
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERROR: Game not found");
-    }
+    // @PostMapping("/api/games/{id}/cheatstate")
+    // @ResponseStatus(HttpStatus.ACCEPTED)
+    // public void cheats(@PathVariable("id") long gameID, @RequestBody String cheat)
+    // {
+    //     for (int count = 0; count < games.size(); ++count)
+    //     {
+    //         ApiGameWrapper apiGame = new ApiGameWrapper(games.get(count), count + 1);
+    //         if (apiGame.gameNumber == gameID)
+    //         {
+    //             switch (cheat) {
+    //                 case "1_CHEESE" -> {
+    //                     games.get(count).setNumberCheeseToCollect(1);
+    //                     return; }
+    //                 case "SHOW_ALL" -> {
+    //                     games.get(count).getMaze().makeAllCellsVisible();
+    //                     return; }
+    //                 default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERROR: Invalid cheat selected");
+    //             }
+    //         }
+    //     }
+    //     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERROR: Game not found");
+    // }
 
-    private MoveDirection stringToMoveDirection(String move)
-    {
-        return switch (move) {
-            case "MOVE_UP" -> MOVE_UP;
-            case "MOVE_DOWN" -> MOVE_DOWN;
-            case "MOVE_LEFT" -> MOVE_LEFT;
-            case "MOVE_RIGHT" -> MOVE_RIGHT;
-            case "MOVE_CATS" -> MOVE_CATS;
-            default -> null;
-        };
-    }
+    // private MoveDirection stringToMoveDirection(String move)
+    // {
+    //     return switch (move) {
+    //         case "MOVE_UP" -> MOVE_UP;
+    //         case "MOVE_DOWN" -> MOVE_DOWN;
+    //         case "MOVE_LEFT" -> MOVE_LEFT;
+    //         case "MOVE_RIGHT" -> MOVE_RIGHT;
+    //         case "MOVE_CATS" -> MOVE_CATS;
+    //         default -> null;
+    //     };
+    // }
 }

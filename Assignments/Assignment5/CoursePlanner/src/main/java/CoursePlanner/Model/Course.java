@@ -1,4 +1,4 @@
-package WebApp.Model;
+package CoursePlanner.Model;
 
 import java.util.ArrayList;
 
@@ -105,7 +105,7 @@ public class Course
         this.componentCode = componentCode;
     }
 
-    public void debugDisplay() 
+    public void dump() 
     {
         System.out.println("Semester: " + semester);
         System.out.println("Subject: " + subject);

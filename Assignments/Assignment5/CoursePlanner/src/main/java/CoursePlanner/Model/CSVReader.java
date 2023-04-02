@@ -1,4 +1,4 @@
-package WebApp.Model;
+package CoursePlanner.Model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -44,11 +44,11 @@ public class CSVReader
         return courses;
     }
 
-    public void printCSV()
+    public void dumpCSV() //make so dumb is formatted to requirements
     {
         for (Course course : courses)
         {
-            course.debugDisplay();
+            course.dump();
             System.out.println();
         }
     }
