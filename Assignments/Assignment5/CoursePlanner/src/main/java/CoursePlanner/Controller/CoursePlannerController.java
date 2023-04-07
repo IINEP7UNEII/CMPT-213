@@ -30,6 +30,7 @@ public class CoursePlannerController
     }
 
     @GetMapping("/api/about")
+    @ResponseStatus(HttpStatus.OK)
     public String getAbout()
     {
         return "Daniel Tolsky";
@@ -37,7 +38,7 @@ public class CoursePlannerController
 
     @GetMapping("/api/dump-model")
     @ResponseStatus(HttpStatus.OK)
-    public void getGameList()
+    public void getDump()
     {
         Dumper dumper = new Dumper();
         dumper.dumpFormattedCourses(courseData);
