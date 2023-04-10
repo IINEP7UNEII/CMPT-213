@@ -25,6 +25,11 @@ public class CourseList
         return courseNums;
     }
 
+    public CourseNumber get(int index)
+    {
+        return courseNums.get(index);
+    }
+
     public void populateCourseList(ArrayList<CourseData> dataList)
     {
         for (CourseData data : dataList)
@@ -39,8 +44,9 @@ public class CourseList
                 }
                 else
                 {
-                    CourseOffering newCourse = new CourseOffering(data);
-                    courseNums.get(courseNumIndex).getOfferings().add(newCourse);
+                    CourseOffering newOffering = new CourseOffering(data);
+                    courseNums.get(courseNumIndex).getOfferings().add(newOffering);
+                    newOffering.setId(courseNums.get(courseNumIndex).getOfferings().size()); ///////////////////
                 }
             }
             else
@@ -48,8 +54,9 @@ public class CourseList
                 CourseNumber newCourseNum = new CourseNumber(data);
                 courseNums.add(newCourseNum);
 
-                CourseOffering newCourseOffering = new CourseOffering(data);
-                courseNums.get(0).getOfferings().add(newCourseOffering);
+                CourseOffering newOffering = new CourseOffering(data);
+                newOffering.setId(0);
+                courseNums.get(0).getOfferings().add(newOffering);
             }
         }
     }
@@ -78,6 +85,8 @@ public class CourseList
         else
         {
             courseNums.get(courseNumIndex).getOfferings().get(offeringIndex).getComponents().add(component);
+            courseNums.get(courseNumIndex).getOfferings().get(offeringIndex)
+            .setId(courseNums.get(courseNumIndex).getOfferings().size()); ////////////////////////////////
         }
 
         int newInstructorIndex = newInstructorIndex(data, courseNumIndex, offeringIndex);

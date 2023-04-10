@@ -16,12 +16,14 @@ public class CourseNumber
 {
     private String subject;
     private String catalogNumber;
+    private int courseId;
     private ArrayList<CourseOffering> offerings;
 
     public CourseNumber() 
     {
         subject = null;
         catalogNumber  = null;
+        courseId = 0;
         offerings = null;
     }
 
@@ -29,6 +31,7 @@ public class CourseNumber
     {
         subject = data.getSubject();
         catalogNumber = data.getCatalogNumber();
+        courseId = 0;
         offerings = new ArrayList<CourseOffering>();
     }
 
@@ -50,6 +53,16 @@ public class CourseNumber
     public void setCatalogNumber(String catalogNumber)
     {
         this.catalogNumber = catalogNumber;
+    }
+
+    public int getId() 
+    {
+        return courseId;
+    }
+
+    public void setId(int courseId) 
+    {
+        this.courseId = courseId;
     }
 
     public ArrayList<CourseOffering> getOfferings() 

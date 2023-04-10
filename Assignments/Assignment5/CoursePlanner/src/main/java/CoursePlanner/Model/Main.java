@@ -1,5 +1,6 @@
 package CoursePlanner.Model;
 
+import CoursePlanner.Model.FormattedCourses.CourseList;
 import CoursePlanner.Model.RawData.CSVReader;
 
 /**
@@ -13,9 +14,11 @@ public class Main
     public static void main(String[] args) 
     {
         CSVReader reader = new CSVReader();
+        CourseList courseList = new CourseList();
         reader.readCSVFile();
+        courseList.populateCourseList(reader.getCourseDataList());
 
         Dumper dumper = new Dumper();
-        dumper.dumpFormattedCourses(reader.getCourseDataList());
+        dumper.dumpFormattedCourses(courseList);
     }
 }

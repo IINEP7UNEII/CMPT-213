@@ -16,6 +16,7 @@ public class CourseOffering
 {
     private int semester;
     private String location;
+    private int offeringId;
     private ArrayList<String> instructors;
     private ArrayList<Component> components;
 
@@ -24,6 +25,7 @@ public class CourseOffering
         semester = 0;
         location = null;
         instructors = null;
+        offeringId = 0;
         components = new ArrayList<Component>();
     }
 
@@ -32,6 +34,7 @@ public class CourseOffering
         semester = data.getSemester();
         location = data.getLocation();
         instructors = data.getInstructors();
+        offeringId = 0;
         components = new ArrayList<Component>();
         components.add(new Component(
         data.getComponentCode(), 
@@ -42,6 +45,28 @@ public class CourseOffering
     public int getSemester() 
     {
         return semester;
+    }
+
+    public int getYear() 
+    {
+        return (semester / 10) + 1900;
+    }
+
+    public String getTerm() /////////////////////////////
+    {
+        String result = "";
+        switch (semester % 10)
+        {
+            case 1:
+                result = "Spring";
+
+            case 4:
+                result = "Summer";
+
+            case 7:
+                result = "Fall";
+        }
+        return result;
     }
 
     public void setSemester(int semester) 
@@ -64,9 +89,34 @@ public class CourseOffering
         return instructors;
     }
 
+    public String getInstructorsString() 
+    {
+        StringBuilder builder = new StringBuilder();
+        for (int count = 0; count < instructors.size(); ++count) 
+        {
+            builder.append(instructors.get(count));
+
+            if (count < instructors.size() - 1) 
+            {
+                builder.append(", ");
+            }
+        }
+        return builder.toString();
+    }
+
     public void setInstructors(ArrayList<String> instructors) 
     {
         this.instructors = instructors;
+    }
+
+    public int getId() 
+    {
+        return offeringId;
+    }
+
+    public void setId(int offeringId) 
+    {
+        this.offeringId = offeringId;
     }
 
     public ArrayList<Component> getComponents()

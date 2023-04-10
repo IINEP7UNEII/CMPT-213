@@ -27,11 +27,8 @@ public class Dumper
         }
     }
 
-    public void dumpFormattedCourses(ArrayList<CourseData> courseData)
+    public void dumpFormattedCourses(CourseList courseList)
     {
-        CourseList courseList = new CourseList();
-        courseList.populateCourseList(courseData);
-
         for (int courseNumCount = 0; courseNumCount < courseList.getList().size(); ++courseNumCount)
         {
             System.out.println(courseList.getList().get(courseNumCount).getSubject()
@@ -45,7 +42,7 @@ public class Dumper
         }
     }
 
-    public void dumpOutputHelper(CourseList courseList, int courseNumCount, int courseOfferingCount)
+    private void dumpOutputHelper(CourseList courseList, int courseNumCount, int courseOfferingCount)
     {
         System.out.println("\t" + courseList.getList().get(courseNumCount)
         .getOfferings().get(courseOfferingCount).getSemester()
