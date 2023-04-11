@@ -23,9 +23,9 @@ public class CourseOffering
     public CourseOffering() 
     {
         semester = 0;
-        location = null;
-        instructors = null;
+        location = "";
         offeringId = 0;
+        instructors = new ArrayList<String>();
         components = new ArrayList<Component>();
     }
 
@@ -33,13 +33,24 @@ public class CourseOffering
     {
         semester = data.getSemester();
         location = data.getLocation();
-        instructors = data.getInstructors();
         offeringId = 0;
+        instructors = data.getInstructors();
         components = new ArrayList<Component>();
         components.add(new Component(
         data.getComponentCode(), 
         data.getEnrollmentTotal(), 
         data.getEnrollmentCapacity()));
+    }
+
+    public CourseOffering(int semester, String location, String instructor, Component component) 
+    {
+        this.semester = semester;
+        this.location = location;
+        offeringId = 0;
+        instructors = new ArrayList<String>();
+        instructors.add(instructor);
+        components = new ArrayList<Component>();
+        components.add(component);
     }
 
     public int getSemester() 
@@ -52,19 +63,22 @@ public class CourseOffering
         return (semester / 10) + 1900;
     }
 
-    public String getTerm() /////////////////////////////
+    public String getTerm()
     {
         String result = "";
         switch (semester % 10)
         {
             case 1:
                 result = "Spring";
+                break;
 
             case 4:
                 result = "Summer";
+                break;
 
             case 7:
                 result = "Fall";
+                break;
         }
         return result;
     }

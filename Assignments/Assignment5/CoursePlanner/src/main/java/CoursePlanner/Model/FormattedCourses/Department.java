@@ -34,7 +34,7 @@ public class Department
         return deptID;
     }
 
-    public void setDeptID(int deptID) 
+    public void setId(int deptID) 
     {
         this.deptID = deptID;
     }

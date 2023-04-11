@@ -2,6 +2,7 @@ package CoursePlanner.Model.FormattedCourses;
 
 import java.util.ArrayList;
 
+import CoursePlanner.Controller.Watchers.Watcher;
 import CoursePlanner.Model.RawData.CourseData;
 
 /**
@@ -12,25 +13,34 @@ import CoursePlanner.Model.RawData.CourseData;
  * @author Daniel Tolsky
  * @version 1.0
  */
-public class CourseNumber 
+public class CourseNumber
 {
     private String subject;
     private String catalogNumber;
     private int courseId;
     private ArrayList<CourseOffering> offerings;
+    private ArrayList<Watcher> watchers;
 
     public CourseNumber() 
     {
-        subject = null;
-        catalogNumber  = null;
+        subject = "";
+        catalogNumber  = "";
         courseId = 0;
-        offerings = null;
+        offerings = new ArrayList<CourseOffering>();
     }
 
     public CourseNumber(CourseData data) 
     {
         subject = data.getSubject();
         catalogNumber = data.getCatalogNumber();
+        courseId = 0;
+        offerings = new ArrayList<CourseOffering>();
+    }
+
+    public CourseNumber(String subject, String catalogNumber) 
+    {
+        this.subject = subject;
+        this.catalogNumber = catalogNumber;
         courseId = 0;
         offerings = new ArrayList<CourseOffering>();
     }
@@ -70,8 +80,32 @@ public class CourseNumber
         return offerings;
     }
 
-    public void setOfferings(ArrayList<CourseOffering> offerings)
+    public void setOfferings(ArrayList<CourseOffering> offerings, Component component)
     {
         this.offerings = offerings;
+    }
+
+    public void addOffering(CourseOffering courseOffering)
+    {
+        offerings.add(courseOffering);
+        notifyWatcher(courseOffering);
+    }
+
+    public void addWatcher(Watcher watcher) 
+    {
+        watchers.add(watcher);
+    }
+
+    public void removeWatcher(Watcher watcher)
+    {
+        watchers.remove(watcher);
+    }
+
+    public void notifyWatcher(CourseOffering offering) 
+    {
+        for (Watcher watcher : watchers) 
+        {
+            watcher.stateChanged(offering);
+        }
     }
 }

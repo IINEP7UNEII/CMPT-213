@@ -45,8 +45,7 @@ public class CourseList
                 else
                 {
                     CourseOffering newOffering = new CourseOffering(data);
-                    courseNums.get(courseNumIndex).getOfferings().add(newOffering);
-                    newOffering.setId(courseNums.get(courseNumIndex).getOfferings().size()); ///////////////////
+                    courseNums.get(courseNumIndex).addOffering(newOffering);
                 }
             }
             else
@@ -55,8 +54,7 @@ public class CourseList
                 courseNums.add(newCourseNum);
 
                 CourseOffering newOffering = new CourseOffering(data);
-                newOffering.setId(0);
-                courseNums.get(0).getOfferings().add(newOffering);
+                courseNums.get(0).addOffering(newOffering);
             }
         }
     }
@@ -85,8 +83,6 @@ public class CourseList
         else
         {
             courseNums.get(courseNumIndex).getOfferings().get(offeringIndex).getComponents().add(component);
-            courseNums.get(courseNumIndex).getOfferings().get(offeringIndex)
-            .setId(courseNums.get(courseNumIndex).getOfferings().size()); ////////////////////////////////
         }
 
         int newInstructorIndex = newInstructorIndex(data, courseNumIndex, offeringIndex);

@@ -1,6 +1,8 @@
 package CoursePlanner.Model.FormattedCourses;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Departments 
 {
@@ -15,6 +17,8 @@ public class Departments
     {
         departments = new ArrayList<Department>();
         populateDepartmentsList(courseList);
+        sortAll();
+        setIds();
     }
 
     public ArrayList<Department> getDepartments() 
@@ -35,7 +39,6 @@ public class Departments
             if (!isInDepartmentList(courseList.get(count).getSubject()))
             {
                 Department dept = new Department(deptCount, courseList.get(count).getSubject());
-                courseList.get(count).setId(dept.getCourseNums().size());
                 dept.getCourseNums().add(courseList.get(count));
                 departments.add(dept);
                 ++deptCount;
@@ -65,9 +68,82 @@ public class Departments
         {
             if (dept.getName().equals(courseList.get(count).getSubject()))
             {
-                courseList.get(count).setId(dept.getCourseNums().size());
                 dept.getCourseNums().add(courseList.get(count));
                 break;
+            }
+        }
+    }
+
+    private void setIds() 
+    {
+        for (int deptCount = 0; deptCount 
+        < departments.size(); ++deptCount)
+        {
+            departments.get(deptCount).setId(deptCount);
+
+            for (int courseNumCount = 0; courseNumCount < departments.get(deptCount)
+            .getCourseNums().size(); ++courseNumCount)
+            {
+                departments.get(deptCount).getCourseNums().get(courseNumCount).setId(courseNumCount);
+
+                for (int offeringCount = 0; offeringCount < departments.get(deptCount)
+                .getCourseNums().get(courseNumCount).getOfferings().size(); ++offeringCount)
+                {
+                    departments.get(deptCount).getCourseNums().get(courseNumCount)
+                    .getOfferings().get(offeringCount).setId(offeringCount);
+                }
+            }
+        }
+    }
+
+    private void sortAll() 
+    {
+        sortDepartments();
+        sortCourseNums();
+        sortOfferings();
+    }
+
+    private void sortDepartments()
+    {
+        Collections.sort(departments, new Comparator<Department>() 
+        {
+            @Override
+            public int compare(Department dept1, Department dept2) 
+            {
+                return dept1.getName().compareTo(dept2.getName());
+            }
+        });
+    }
+
+    private void sortCourseNums()
+    {
+        for (Department dept : departments)
+        {
+            Collections.sort(dept.getCourseNums(), new Comparator<CourseNumber>()  
+            {
+                @Override
+                public int compare(CourseNumber course1, CourseNumber course2) 
+                {
+                    return course1.getCatalogNumber().compareTo(course2.getCatalogNumber());
+                }
+            });
+        }
+    }
+
+    private void sortOfferings()
+    {
+        for (Department dept : departments)
+        {
+            for (CourseNumber courseNum : dept.getCourseNums())
+            {
+                Collections.sort(courseNum.getOfferings(), new Comparator<CourseOffering>()  
+                {
+                    @Override
+                    public int compare(CourseOffering offering1, CourseOffering offering2) 
+                    {
+                        return Integer.compare(offering1.getSemester(), offering2.getSemester());
+                    }
+                });
             }
         }
     }
