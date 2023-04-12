@@ -21,7 +21,7 @@ public class CSVReader
     {
         CSV_FILE = "data/course_data_2018.csv";
         NUMBER_OF_FIELDS = 8;
-        courseData = new ArrayList<>();
+        courseData = new ArrayList<CourseData>();
     }
 
     public ArrayList<CourseData> readCSVFile() 
@@ -54,6 +54,11 @@ public class CSVReader
     public ArrayList<CourseData> getCourseDataList()
     {
         return courseData;
+    }
+
+    public void addData(CourseData data)
+    {
+        courseData.add(data);
     }
 
     private void populateCourseData(String line, int instructorEndIndex) 

@@ -27,6 +27,7 @@ public class CourseNumber
         catalogNumber  = "";
         courseId = 0;
         offerings = new ArrayList<CourseOffering>();
+        watchers = new ArrayList<Watcher>();
     }
 
     public CourseNumber(CourseData data) 
@@ -35,6 +36,7 @@ public class CourseNumber
         catalogNumber = data.getCatalogNumber();
         courseId = 0;
         offerings = new ArrayList<CourseOffering>();
+        watchers = new ArrayList<Watcher>();
     }
 
     public CourseNumber(String subject, String catalogNumber) 
@@ -43,6 +45,7 @@ public class CourseNumber
         this.catalogNumber = catalogNumber;
         courseId = 0;
         offerings = new ArrayList<CourseOffering>();
+        watchers = new ArrayList<Watcher>();
     }
 
     public String getSubject() 
@@ -96,9 +99,20 @@ public class CourseNumber
         watchers.add(watcher);
     }
 
-    public void removeWatcher(Watcher watcher)
+    public void removeWatcher(long id)
     {
-        watchers.remove(watcher);
+        for (Watcher watcher : watchers)
+        {
+            if (watcher.getId() == id) 
+            {
+                watchers.remove(watcher);
+            }
+        }
+    }
+
+    public int watcherAmount()
+    {
+        return watchers.size();
     }
 
     public void notifyWatcher(CourseOffering offering) 
@@ -107,5 +121,18 @@ public class CourseNumber
         {
             watcher.stateChanged(offering);
         }
+    }
+
+    public int getEnrolledTotal(int semesterCode) 
+    {
+        int total = 0;
+        for (CourseOffering offering : offerings) 
+        {
+            if (offering.getSemester() == semesterCode) 
+            {
+                total += offering.getLectureEnrollTotal();
+            }
+        }
+        return total;
     }
 }

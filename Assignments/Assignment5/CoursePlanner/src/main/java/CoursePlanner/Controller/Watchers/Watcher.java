@@ -8,7 +8,7 @@ import CoursePlanner.Model.FormattedCourses.*;
 
 public class Watcher implements Observer
 {
-    private int watcherId;
+    private long watcherId;
     private Department department;
     private CourseNumber courseNum;
     private ArrayList<String> events;
@@ -16,7 +16,7 @@ public class Watcher implements Observer
     public Watcher() 
     { }
 
-    public Watcher(int watcherId, Department department, CourseNumber courseNum) 
+    public Watcher(long watcherId, Department department, CourseNumber courseNum) 
     {
         this.watcherId = watcherId;
         this.department = department;
@@ -34,12 +34,12 @@ public class Watcher implements Observer
         events.add(event);
     }
 
-    public int getId() 
+    public long getId() 
     {
         return watcherId;
     }
 
-    public void setId(int watcherId) 
+    public void setId(long watcherId) 
     {
         this.watcherId = watcherId;
     }

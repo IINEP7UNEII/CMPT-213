@@ -1,9 +1,9 @@
 package CoursePlanner.Controller;
 
-import CoursePlanner.Controller.Watchers.Watcher;
+import CoursePlanner.Controller.Watchers.*;
 import CoursePlanner.Model.*;
 import CoursePlanner.Model.FormattedCourses.*;
-import CoursePlanner.Model.RawData.CSVReader;
+import CoursePlanner.Model.RawData.*;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Description: This CoursePlannerController class handles the /api/about and /api/dump-model
@@ -27,6 +28,7 @@ public class CoursePlannerController
     private CSVReader reader;
     private Departments depts;
     private ArrayList<Watcher> watchers = new ArrayList<Watcher>();
+    private AtomicLong watcherId = new AtomicLong();
 
     public CoursePlannerController()
     {
@@ -150,23 +152,46 @@ public class CoursePlannerController
         return sections;
     }
 
-    /////////////////////bonus
+    @GetMapping("/api/stats/students-per-semester")
+    @ResponseStatus(HttpStatus.OK)
+    public ArrayList<Map<String, Integer>> getGraphData(@RequestParam(value="deptId") int id) 
+    {
+        ArrayList<Map<String, Integer>> mapPoints = new ArrayList<Map<String, Integer>>();
+
+        try 
+        {
+            for (GraphData data : depts.getDepartments().get(id).getDeptGraphData())
+            {
+                Map<String, Integer> point = new HashMap<String, Integer>();
+                point.put("semesterCode", data.getSemester());
+                point.put("totalCoursesTaken", data.getCoursesTaken());
+                mapPoints.add(point);
+            }
+        }
+        catch (ArrayIndexOutOfBoundsException exception)
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, 
+            "ERROR: Department or Course ID not found in system!");
+        }
+        return mapPoints;
+    }
 
     @PostMapping("/api/addoffering")
     @ResponseStatus(HttpStatus.CREATED)
-    public void newOffering(@RequestBody String semester, @RequestBody String subjectName, 
-    @RequestBody String catalogNumber, @RequestBody String location, @RequestBody String enrollmentCap,
-    @RequestBody String component, @RequestBody String enrollmentTotal, @RequestBody String instructor) ///////////////////test
+    public CourseOffering newOffering(@RequestBody RawData data)
     {
-        Component newComponent = new Component(component, Integer.parseInt(enrollmentTotal),
-        Integer.parseInt(enrollmentCap));
-        CourseOffering newOffering = new CourseOffering(Integer.parseInt(semester), 
-        location, instructor, newComponent);
-        CourseNumber newCourseNumber = new CourseNumber(subjectName, catalogNumber);
+        Component newComponent = new Component(data);
+        CourseOffering newOffering = new CourseOffering(data.getSemester(), 
+        data.getLocation(), data.getInstructorsString() ,newComponent);
+        CourseNumber newCourseNumber = new CourseNumber(data.getSubject(), data.getCatalogNumber());
         newCourseNumber.addOffering(newOffering);
 
-        courseList.getList().add(newCourseNumber);
+        data.setSubject(watchers.get(watchers.size() - 1).getCourse().getSubject());
+        data.setCatalogNumber(watchers.get(watchers.size() - 1).getCourse().getCatalogNumber());
+        reader.addData(data);
+        courseList.populateCourseList(reader.getCourseDataList());
         depts = new Departments(courseList);
+        return newOffering;
     }
 
     @GetMapping("/api/watchers")
@@ -177,43 +202,75 @@ public class CoursePlannerController
     }
 
     @PostMapping("/api/watchers")
-    @ResponseStatus(HttpStatus.CREATED) //finish watchers
-    public Watcher newWatcher(@RequestBody int deptId, @RequestBody int courseId) 
+    @ResponseStatus(HttpStatus.CREATED)
+    public Watcher newWatcher(@RequestBody WatcherData data) 
     {
-        Department registerDept = null;
-        Course registerCourse = null;
-
-        int courseExceptionFlag = 0;
-
-        for (Department eachDept : departments) 
+        try 
         {
-            if (eachDept.getDeptId() == watcherData.getDeptId()) 
-            {
-                courseExceptionFlag = 1;
-                registerDept = eachDept;
+            Watcher newWatcher = new Watcher
+            (watcherId.incrementAndGet(), depts.get((int) data.getDeptId()),
+            depts.get((int) data.getDeptId()).getCourseNums().get((int) data.getCourseId()));
 
-                if (eachDept.findCourseById(watcherData.getCourseId()) != null) 
-                {
-                    registerCourse = eachDept.findCourseById(watcherData.getCourseId());
-                }
-            }
-        }
-
-        if (registerCourse != null) 
-        {
-            Watcher newWatcher = new Watcher(nextId.incrementAndGet(), registerDept, registerCourse);
+            depts.get((int) data.getDeptId()).getCourseNums().get((int) data.getCourseId()).addWatcher(newWatcher);
             watchers.add(newWatcher);
             return newWatcher;
         }
-
-
-        if (courseExceptionFlag == 1) 
+        catch (ArrayIndexOutOfBoundsException exception)
         {
-            String error = "Course of ID " + watcherData.getCourseId() + " not found.";
-            throw new CourseNotFoundException(error);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, 
+            "ERROR: Department or Course ID not found in system!");
         }
+    }
 
-        String error = "Department of ID " + watcherData.getDeptId() + " not found.";
-        throw new DepartmentNotFoundException(error);
+    @GetMapping("/api/watchers/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Watcher getWatcher(@PathVariable("id") long id) 
+    {
+        try 
+        {
+            Watcher returnWatcher = new Watcher();
+            for (Watcher watcher : watchers) 
+            {
+                if (watcher.getId() == id) 
+                {
+                    returnWatcher = watcher;
+                }
+            }
+            return returnWatcher;
+        }
+        catch (ArrayIndexOutOfBoundsException exception)
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, 
+            "ERROR: Department or Course ID not found in system!");
+        }
+    }
+
+    @DeleteMapping("/api/watchers/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteWatcher(@PathVariable("id") long id) 
+    {
+        try 
+        {
+            for (Watcher watcher : watchers)
+            {
+                if (watcher.getId() == id) 
+                {
+                    watchers.remove(watcher);
+                }
+            }
+
+            for (Department dept : depts.getDepartments())
+            {
+                for (CourseNumber course : dept.getCourseNums())
+                {
+                    course.removeWatcher(id);
+                }
+            }
+        }
+        catch (ArrayIndexOutOfBoundsException exception)
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, 
+            "ERROR: Department or Course ID not found in system!");
+        }
     }
 }

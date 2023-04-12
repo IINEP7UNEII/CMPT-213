@@ -1,6 +1,7 @@
 package CoursePlanner.Model.FormattedCourses;
 
 import CoursePlanner.Model.RawData.CourseData;
+import CoursePlanner.Model.RawData.RawData;
 
 /**
  * Description: This CourseOffering class is the main class which hold information for each individual course offering.
@@ -40,6 +41,16 @@ public class CourseOffering
         data.getComponentCode(), 
         data.getEnrollmentTotal(), 
         data.getEnrollmentCapacity()));
+    }
+
+    public CourseOffering(CourseData data, Component component) 
+    {
+        semester = data.getSemester();
+        location = data.getLocation();
+        offeringId = 0;
+        instructors = data.getInstructors();
+        components = new ArrayList<Component>();
+        components.add(component);
     }
 
     public CourseOffering(int semester, String location, String instructor, Component component) 
@@ -136,5 +147,18 @@ public class CourseOffering
     public ArrayList<Component> getComponents()
     {
         return components;
+    }
+
+    public int getLectureEnrollTotal() 
+    {
+        int total = 0;
+        for (Component component : components)
+        {
+            if (component.getType().equals("LEC")) 
+            {
+                total += component.getEnrolled();
+            }
+        }
+        return total;
     }
 }

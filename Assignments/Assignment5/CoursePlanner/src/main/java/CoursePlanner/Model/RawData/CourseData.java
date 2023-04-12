@@ -13,24 +13,24 @@ import java.util.ArrayList;
 public class CourseData
 {
     private int semester;
-    private String subject;
+    private String subjectName;
     private String catalogNumber;
     private String location;
-    private int enrollmentCapacity;
+    private int enrollmentCap;
     private int enrollmentTotal;
     private ArrayList<String> instructors;
-    private String componentCode;
+    private String component;
 
     public CourseData() 
     {
         semester = 0;
-        subject = null;
-        catalogNumber  = null;
-        location = null;
-        enrollmentCapacity = 0;
+        subjectName = "";
+        catalogNumber  = "";
+        location = "";
+        enrollmentCap = 0;
         enrollmentTotal = 0;
-        instructors = null;
-        componentCode = null;
+        instructors = new ArrayList<String>();
+        component = "";
     }
 
     public int getSemester() 
@@ -45,12 +45,12 @@ public class CourseData
 
     public String getSubject() 
     {
-        return subject;
+        return subjectName;
     }
 
-    public void setSubject(String subject) 
+    public void setSubject(String subjectName) 
     {
-        this.subject = subject;
+        this.subjectName = subjectName;
     }
 
     public String getCatalogNumber() 
@@ -75,12 +75,12 @@ public class CourseData
 
     public int getEnrollmentCapacity() 
     {
-        return enrollmentCapacity;
+        return enrollmentCap;
     }
 
-    public void setEnrollmentCapacity(int enrollmentCapacity) 
+    public void setEnrollmentCapacity(int enrollmentCap) 
     {
-        this.enrollmentCapacity = enrollmentCapacity;
+        this.enrollmentCap = enrollmentCap;
     }
 
     public int getEnrollmentTotal() 
@@ -105,23 +105,23 @@ public class CourseData
 
     public String getComponentCode() 
     {
-        return componentCode;
+        return component;
     }
 
-    public void setComponentCode(String componentCode) 
+    public void setComponentCode(String component) 
     {
-        this.componentCode = componentCode;
+        this.component = component;
     }
 
     public void dataDump() //for debugging
     {
         System.out.println("Semester: " + semester);
-        System.out.println("Subject: " + subject);
+        System.out.println("Subject: " + subjectName);
         System.out.println("Catalog Number: " + catalogNumber);
         System.out.println("Location: " + location);
-        System.out.println("Enrollment Capacity: " + enrollmentCapacity);
+        System.out.println("Enrollment Capacity: " + enrollmentCap);
         System.out.println("Enrollment Total: " + enrollmentTotal);
         System.out.println("Instructors: " + instructors);
-        System.out.println("Component Code: " + componentCode);
+        System.out.println("Component Code: " + component);
     }
 }
